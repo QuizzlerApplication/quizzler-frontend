@@ -8,7 +8,9 @@ interface PrimaryButtonProps {
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({ label, onClick }) => {
   return (
     <button
-      className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition-transform transform active:scale-95"
+      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-500 hover:bg-blue-600 text-white     font-semibold py-2 px-4 rounded-full transition-transform transform active:scale-95
+      text-xs sm:text-lg
+      "
       onClick={onClick}
     >
       {label}

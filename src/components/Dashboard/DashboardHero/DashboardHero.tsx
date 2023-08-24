@@ -5,10 +5,10 @@ import '@/styles/animations.css';
 
 const DashboardHero = () => {
   return (
-    <section className="text-black bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-b-2xl shadow-lg animate-gradientAnimation duration-3000 h-fit">
+    <section className="text-black bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-b-2xl shadow-lg animate-gradientAnimation duration-3000 h-fit ">
       {/* Apply the animation class here */}
       <Container>
-        <div className="pt-10">
+        <div className="pt-10 xs:pt-12">
           <h1 className="text-white text-3xl font-bold">
             🚀 Test Your Knowledge!
           </h1>

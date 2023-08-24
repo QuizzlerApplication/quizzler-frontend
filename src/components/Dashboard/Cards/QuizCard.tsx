@@ -22,13 +22,9 @@ const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
                     <h3 className="text-lg font-semibold">{topic}</h3>
                     <p className="text-md font-regular mb-1">{`${numQuestions}/${numQuestions}`}</p>
                 </div>
-                <div className="">
-
-                    <button>
-                        Edit
-                    </button>
+                <div className="space-x-1 flex flex-col xs:flex-row justify-end items-center">
+                    <SecondaryButton label='Edit' onClick={()=>{123}}/>
                     <PrimaryButton label='Start' onClick={()=>{123}}/>
-                    <SecondaryButton label='Start' onClick={()=>{123}}/>
                 </div>
             </div>
         </Link>

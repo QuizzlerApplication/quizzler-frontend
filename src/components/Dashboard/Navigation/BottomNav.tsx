@@ -10,12 +10,12 @@ const BottomNav = () => {
         <div className="max-w-screen-sm flex justify-between mx-auto items-center">
             <Link href="/">
                 <div className="text-gray-600 hover:text-gray-900">
-                <Icons type="home" size={28} color="#7861f3" />
+                <Icons type="home" size={25} color="#7861f3" />
                 </div>
             </Link>
             <Link href="/explore">
                 <div className="text-gray-600 hover:text-gray-900">
-                <Icons type="explore" size={32} color="#7861f3" />
+                <Icons type="explore" size={28} color="#7861f3" />
                 </div>
             </Link>
             <Link href="/profile">

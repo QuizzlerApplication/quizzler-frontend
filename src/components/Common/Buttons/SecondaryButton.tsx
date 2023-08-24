@@ -8,7 +8,7 @@ interface SecondaryButtonProps {
 const SecondaryButton: React.FC<SecondaryButtonProps> = ({ label, onClick }) => {
   return (
     <button
-      className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-full transition-transform transform active:scale-95"
+      className=" hover:underline text-gray-800 font-semibold py-2 px-4 rounded-full transition-transform transform active:scale-95 text-xs sm:text-md"
       onClick={onClick}
     >
       {label}

@@ -25,9 +25,10 @@ const DashBoardMenu = () => {
   };
 
   return (
-    <div className='absolute top-44 left-1/2 transform -translate-x-1/2 bg-slate-50 w-full max-w-xl px-10 py-5 rounded-xl '>
+    <div className='absolute top-48 sm:top-38 md:top-38 left-1/2 transform -translate-x-1/2 bg-slate-50 w-3/4 
+      max-w-xl px-8 py-6 rounded-xl '>
       <div className="flex items-center justify-between pb-4">
-        <h2 className='font-semibold text-lg mb-2'>
+        <h2 className='font-semibold text-md sm:text-lg md:text-lg mb-2'>
           {'Add New Quiz'}
         </h2>
         {isAddingQuiz ? <CloseButton onClick={handleCloseButtonClick} /> : <></>}
@@ -48,10 +49,10 @@ const DashBoardMenu = () => {
           </button>
         </div>
       ) : (
-        <p className='text-gray-700'>
+        <p className='text-gray-700 text-left text-sm'>
           Add a new quiz to play and challenge yourself.{' '}
           <button
-            className='ml-2 text-indigo-500 underline cursor-pointer'
+            className=' text-indigo-500 underline cursor-pointer'
             onClick={handleAddQuizClick}
           >
             Click here to add.
