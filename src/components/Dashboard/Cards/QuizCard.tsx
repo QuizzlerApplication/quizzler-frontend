@@ -1,6 +1,5 @@
 "use client"
 import Link from 'next/link';
-import { getRandomColor } from '@/utils/getRandomColor';
 import PrimaryButton from '@/components/Common/Buttons/PrimaryButton';
 import SecondaryButton from '@/components/Common/Buttons/SecondaryButton';
 
