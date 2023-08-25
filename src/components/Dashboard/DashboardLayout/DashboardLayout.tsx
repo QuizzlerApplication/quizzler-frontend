@@ -22,7 +22,7 @@ const DashboardLayout = () => {
                 <div className="pt-32 sm:pt-28">
                     <SubHeader text="Latest Quizzes" size="small"/>
                 </div>
-                <div className="space-x-1 pb-28">
+                <div className="space-x-1 pb-28 md:space-x-0 md:grid md:grid-cols-2 gap-5 lg:grid-cols-3">
                     {dummyQuizData.map((quiz, index) => (
                     <QuizCard
                         key={index}
