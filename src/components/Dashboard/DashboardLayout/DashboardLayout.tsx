@@ -5,24 +5,20 @@ import SubHeader from "@/components/Common/SubHeader/SubHeader";
 import Container from "@/components/Common/Container";
 import QuizCard from "../Cards/QuizCard";
 import DashBoardMenu from "../DashBoardMenu/DashBoardMenu";
+import { Quiz } from "@/models/quizzes";
+import { fetchQuizData } from "@/api/quizData";
 
 const DashboardLayout = () => {
-  interface Question {
-    _id: string;
-    questionTitle: string;
-    correct_answer: string;
-    incorrect_answers: string[];
-  }
-
-  interface Quiz {
-    _id: string;
-    quizTitle: string;
-    questions: Question[];
-  }
+  
 
   // Fetch quiz data from the API using useSWR
   const { data, error } = useSWR(
-    "https://quizzlerreactapp.onrender.com/api/quizzes"
+    "https://quizzlerreactapp.onrender.com/api/quizzes",
+    fetchQuizData,
+    {
+      revalidateOnFocus: false, // Prevent revalidation on window focus
+      refreshInterval: 300000, // Refresh data every 5 minutes
+    }
   );
 
   useEffect(() => {
@@ -41,7 +37,7 @@ const DashboardLayout = () => {
         <div className="pt-32 sm:pt-28">
           <SubHeader text="Latest Quizzes" size="small" />
         </div>
-        <div className="space-x-1 pb-28 md:space-x-0 md:grid md:grid-cols-2 gap-5 lg:grid-cols-3">
+        <div className="space-x-1 space-y-6 pb-28 md:space-x-0 md:space-y-0 md:grid md:grid-cols-2 gap-5 lg:grid-cols-3">
           {data ? (
             data.map((quiz: Quiz, index: number) => (
               <QuizCard
