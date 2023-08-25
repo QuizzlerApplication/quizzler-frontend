@@ -2,8 +2,15 @@
 import React from 'react'
 import Icons from '../Common/Icons'
 import Link from 'next/link'
+import { useQuizStore } from '@/store/useQuizStore'
 
 const SingleQuizHeader = () => {
+
+  /* State */
+  const isHelpOpen = useQuizStore((state) => state.isHelpOpen);
+  const toggleHelp = useQuizStore((state) => state.toggleHelp);
+
+   
   return (
     <div className=' py-4'>
         <div className="flex justify-between items-center">
@@ -11,7 +18,9 @@ const SingleQuizHeader = () => {
                 <Icons type='back' color='#7861f3' size={25}/>
             </Link>
             <h1 className='font-bold  text-lg'>Math</h1>
-            <Icons type='question' color='#7861f3' size={25}/>
+            <button onClick={()=>toggleHelp(!isHelpOpen)}>
+              <Icons type='question' color='#7861f3' size={25}/>
+            </button>
         </div>
     </div>
   )
