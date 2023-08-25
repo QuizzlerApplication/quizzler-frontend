@@ -24,7 +24,7 @@ const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
                 </div>
                 <div className="space-x-1 flex flex-col xs:flex-row justify-end items-center">
                     <SecondaryButton label='Edit' onClick={()=>{123}}/>
-                    <PrimaryButton label='Start' onClick={()=>{123}}/>
+                    <PrimaryButton label='Study' onClick={()=>{123}}/>
                 </div>
             </div>
         </Link>
