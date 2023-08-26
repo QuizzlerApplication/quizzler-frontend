@@ -12,7 +12,7 @@ const DashboardLayout = () => {
   
 
   // Fetch quiz data from the API using useSWR
-  const { data, error } = useSWR(
+  const { data, error, isLoading  } = useSWR(
     "https://quizzlerreactapp.onrender.com/api/quizzes",
     fetchQuizData,
     {
@@ -21,12 +21,12 @@ const DashboardLayout = () => {
     }
   );
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   // Handle loading and error states
   if (error) {
     return <p>Error: {error.message}</p>;
+  }
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
 
   /* Map over the fetched quiz data and render QuizCard components */
@@ -37,7 +37,9 @@ const DashboardLayout = () => {
         <div className="pt-32 sm:pt-28">
           <SubHeader text="Latest Quizzes" size="small" />
         </div>
-        <div className="space-x-1 space-y-6 pb-28 md:space-x-0 md:space-y-0 md:grid md:grid-cols-2 gap-5 lg:grid-cols-3">
+        <div className="space-x-1 space-y-6 pb-28 md:space-x-0 md:space-y-0 
+          md:grid md:grid-cols-2 gap-6 lg:grid-cols-3 3xl:grid-cols-4 xl:gap-7"
+        >
           {data ? (
             data.map((quiz: Quiz, index: number) => (
               <QuizCard
