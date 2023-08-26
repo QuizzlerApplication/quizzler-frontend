@@ -1,5 +1,5 @@
 "use client"
-import React, {useEffect} from 'react';
+import React from 'react';
 import {  useParams } from 'next/navigation'
 import Container from '../Common/Container';
 import SingleQuizHeader from './SingleQuizHeader';
@@ -13,7 +13,7 @@ const SingleQuizLayout = () => {
   const params = useParams();
   const quizId = params.quiz;
 
-  // Fetch quiz data from the API using useSWR
+  /* // Fetch quiz data from the API using useSWR
   const { data, error } = useSWR(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
     getSingleQuizData,
@@ -21,12 +21,8 @@ const SingleQuizLayout = () => {
       revalidateOnFocus: false, // Prevent revalidation on window focus
       refreshInterval: 300000, // Refresh data every 5 minutes
     }
-  );
-
-  useEffect(()=>{
-    console.log(data)
-  },[data])
-
+  ); */
+ 
 
   return (
     <div className='bg-slate-200 h-full'>

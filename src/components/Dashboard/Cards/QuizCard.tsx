@@ -19,10 +19,10 @@ const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
             <Link href={linkTo}>
                 <div className="bg-white rounded-lg shadow-md p-4 flex items-center">
                     <div
-                        className="w-5 h-5 rounded-full mr-3 flex-none bg-gradient-to-r from-indigo-500 to-purple-500 "
+                        className="w-5 h-5 rounded-full mr-3  flex-none bg-gradient-to-r from-indigo-500 to-purple-500 "
                     ></div>
                     <div className='ml-3 flex-grow'>
-                        <h3 className="text-lg font-semibold truncate xl:w-42">{topic}</h3>
+                        <h3 className="text-lg font-semibold truncate lg:w-56">{topic}</h3>
                         <p className="text-md font-regular mb-1">{`${numQuestions}/${numQuestions}`}</p>
                     </div>
                     <div className="space-x-4 flex flex-col xs:flex-row justify-end items-center">
