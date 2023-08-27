@@ -4,7 +4,6 @@ import { useQuizStore } from '@/store/useQuizStore';
 
 interface InformationDisplayProps {
   mode?: 'toLearn' | 'regular';
-
 }
 
 const InformationDisplay: React.FC<InformationDisplayProps> = ({ mode }) => {

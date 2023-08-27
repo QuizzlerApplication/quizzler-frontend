@@ -8,7 +8,7 @@ interface TertiaryButtonProps {
 }
 
 const TertiaryButton: React.FC<TertiaryButtonProps> = ({ label, onClick, answerState }) => {
-  let buttonClassName = "text-white font-semibold py-2 px-4 rounded-lg transition-transform transform active:scale-95 text-md sm:text-md ";
+  let buttonClassName = "text-white font-semibold py-2 px-4 rounded-lg text-md sm:text-md ";
   
   let gradientClassName = "";
   if (answerState === 'correct') {

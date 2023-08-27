@@ -9,6 +9,6 @@ type Actions = {
 };
 
 export const useQuizStore = create<State & Actions>((set) => ({
-  isHelpOpen: true,
+  isHelpOpen: false,
   toggleHelp: (newValue) => set({ isHelpOpen: newValue }),
 }));
