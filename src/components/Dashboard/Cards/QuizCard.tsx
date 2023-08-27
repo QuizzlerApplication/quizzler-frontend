@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import PrimaryButton from '@/components/Common/Buttons/PrimaryButton';
 import SecondaryButton from '@/components/Common/Buttons/SecondaryButton';
-import { cardVariant } from '@/variants/variants';
 
 interface QuizCardProps {
   topic: string;
@@ -14,10 +13,12 @@ interface QuizCardProps {
 const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
 
     return (
-        <motion.div  whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}>
+        <motion.div  
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+        >
             <Link href={linkTo}>
-                <div className="bg-white rounded-lg shadow-md p-4 flex items-center">
+                <div className="bg-white rounded-lg shadow-md p-4 flex items-center ">
                     <div
                         className="w-5 h-5 rounded-full mr-3  flex-none bg-gradient-to-r from-indigo-500 to-purple-500 "
                     ></div>

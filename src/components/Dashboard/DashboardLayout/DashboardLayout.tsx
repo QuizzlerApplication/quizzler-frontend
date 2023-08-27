@@ -5,7 +5,7 @@ import SubHeader from "@/components/Common/SubHeader/SubHeader";
 import Container from "@/components/Common/Container";
 import QuizCard from "../Cards/QuizCard";
 import DashBoardMenu from "../DashBoardMenu/DashBoardMenu";
-import { Quiz } from "@/models/quizzes";
+import { QuizData } from "@/models/quizzes";
 import { fetchQuizData } from "@/api/quizData";
 
 const DashboardLayout = () => {
@@ -41,7 +41,7 @@ const DashboardLayout = () => {
           md:grid md:grid-cols-2 gap-6 lg:grid-cols-3 3xl:grid-cols-4 xl:gap-7"
         >
           {data ? (
-            data.map((quiz: Quiz, index: number) => (
+            data.map((quiz: QuizData, index: number) => (
               <QuizCard
                 key={index}
                 topic={quiz.quizTitle}

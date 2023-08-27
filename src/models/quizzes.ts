@@ -5,8 +5,9 @@ interface Question {
     incorrect_answers: string[];
 }
 
-export interface Quiz {
+export interface QuizData {
     _id: string;
     quizTitle: string;
     questions: Question[];
+    __v: number;
 }
