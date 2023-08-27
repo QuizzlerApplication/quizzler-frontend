@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import Container from '../Common/Container';
 import SingleQuizHeader from './SingleQuizHeader';
 import InformationDisplay from './InformationDisplay/InformationDisplay';
-import { getSingleQuizData } from '@/api/quizData';
+import { fetchData } from '@/api/quizData';
 import useSWR from 'swr';
 import PrimaryCard from '../Common/Cards/PrimaryCard';
 import TertiaryButton from '../Common/Buttons/TertiaryButton';
@@ -19,7 +19,7 @@ const SingleQuizLayout: React.FC = () => {
   /* Fetch Data */
   const { data, error, isValidating } = useSWR<QuizData>(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
-    getSingleQuizData, {
+    fetchData, {
       revalidateOnFocus: false,
       refreshInterval: 300000,
     }

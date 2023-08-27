@@ -1,20 +1,19 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import useSWR from "swr";
 import SubHeader from "@/components/Common/SubHeader/SubHeader";
 import Container from "@/components/Common/Container";
-import QuizCard from "../Cards/QuizCard";
-import DashBoardMenu from "../DashBoardMenu/DashBoardMenu";
+import QuizCard from "./Cards/QuizCard";
+import DashBoardMenu from "./DashBoardMenu/DashBoardMenu";
 import { QuizData } from "@/models/quizzes";
-import { fetchQuizData } from "@/api/quizData";
+import { fetchData } from "@/api/quizData";
 
 const DashboardLayout = () => {
   
-
   // Fetch quiz data from the API using useSWR
   const { data, error, isLoading  } = useSWR(
     "https://quizzlerreactapp.onrender.com/api/quizzes",
-    fetchQuizData,
+    fetchData,
     {
       revalidateOnFocus: false, // Prevent revalidation on window focus
       refreshInterval: 300000, // Refresh data every 5 minutes
