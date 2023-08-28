@@ -11,6 +11,7 @@ import { useModalStore } from "@/store/useModalStore";
 import DisplayCard from "../Common/Cards/DisplayCard";
 import AddButton from "../Common/Buttons/AddButton";
 import LoadingLayout from "../LoadingLayout/LoadingLayout";
+import QuizHeader from "../Common/Header/QuizHeader";
 
 const EditQuizLayout = () => {
   /* Next Router */
@@ -74,7 +75,7 @@ const EditQuizLayout = () => {
             onClose={() => toggleRenameModal(false)}
           />
         )}
-        <EditQuizHeader headerText={quizHeader} quizId={quizId} />
+        <QuizHeader headerText={quizHeader} displayScore={false} />
         <div className="mt-8 space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0 ">
           {questions?.map((question) => (
             <DisplayCard

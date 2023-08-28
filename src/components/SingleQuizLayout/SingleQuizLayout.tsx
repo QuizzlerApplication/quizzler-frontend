@@ -10,6 +10,7 @@ import PrimaryCard from '../Common/Cards/PrimaryCard';
 import TertiaryButton from '../Common/Buttons/TertiaryButton';
 import { QuizData } from '@/models/quizzes';
 import Score from './Score/Score';
+import QuizHeader from '../Common/Header/QuizHeader';
 
 const SingleQuizLayout: React.FC = () => {
   /* Next Router */
@@ -63,7 +64,7 @@ const SingleQuizLayout: React.FC = () => {
       <Container>
         {data && (
           <Container>
-            <SingleQuizHeader headerText={data?.quizTitle} score={finalScore} />
+            <QuizHeader headerText={data?.quizTitle} score={finalScore} displayScore={true} />
             <InformationDisplay />
             <div className='mt-8'>
               {currentQuestion && (
