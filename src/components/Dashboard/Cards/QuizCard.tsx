@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import PrimaryButton from '@/components/Common/Buttons/PrimaryButton';
 import SecondaryButton from '@/components/Common/Buttons/SecondaryButton';
-import { cardVariant } from '@/variants/variants';
 
 interface QuizCardProps {
   topic: string;
@@ -29,9 +28,7 @@ const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
                         <Link href={`${linkTo}/edit`}>
                             <SecondaryButton label='Edit' onClick={()=>{123}}/>
                         </Link>
-                        <Link href={linkTo}>
-                            <PrimaryButton label='Study' onClick={()=>{123}}/>
-                        </Link>
+                        <PrimaryButton label='Study' onClick={()=>{123}}/>
                     </div>
                 </div>
             </Link>

@@ -26,7 +26,6 @@ const SingleQuizLayout: React.FC = () => {
   );
 
   /* TODO if we get to the end of the quiz we want to make put request to update */
-
   /* State */
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
@@ -34,6 +33,7 @@ const SingleQuizLayout: React.FC = () => {
     correct: 0,
     incorrect: 0,
   });
+
   /* Variables */
   const currentQuestion = data?.questions[currentQuestionIndex];
   const endOfQuiz = (currentQuestionIndex === data?.questions.length);
@@ -63,7 +63,7 @@ const SingleQuizLayout: React.FC = () => {
       <Container>
         {data && (
           <Container>
-            <SingleQuizHeader headerText={data.quizTitle} score={finalScore} />
+            <SingleQuizHeader headerText={data?.quizTitle} score={finalScore} />
             <InformationDisplay />
             <div className='mt-8'>
               {currentQuestion && (
