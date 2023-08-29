@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import useSWR from "swr";
 import { fetchData } from "@/api/quizData";
 import { useParams } from "next/navigation";
-import EditQuizHeader from "./Header/EditQuizHeader";
 import Container from "../Common/Container";
 import { QuizData } from "@/models/quizzes";
 import PrimaryCard from "../Common/Cards/PrimaryCard";
@@ -10,8 +9,10 @@ import { DeleteQuizModal, RenameQuizModal } from "../Common/Modal/Modal";
 import { useModalStore } from "@/store/useModalStore";
 import DisplayCard from "../Common/Cards/DisplayCard";
 import AddButton from "../Common/Buttons/AddButton";
-import LoadingLayout from "../LoadingLayout/LoadingLayout";
+import LoadingLayout from "../Loading/LoadingLayout";
 import QuizHeader from "../Common/Header/QuizHeader";
+import SpeedDialButton from "../Common/Buttons/SpeedDialButton";
+import AddQuizModal from "../Common/Modal/AddQuizModal";
 
 const EditQuizLayout = () => {
   /* Next Router */
@@ -23,17 +24,12 @@ const EditQuizLayout = () => {
     isModalOpen,
     isDeleteModalOpen,
     isRenameModalOpen,
+    isAddQuizModalOpen,
     toggleModal,
     toggleDeleteModal,
     toggleRenameModal,
-  } = useModalStore((state) => ({
-    isModalOpen: state.isModalOpen,
-    isDeleteModalOpen: state.isDeleteModalOpen,
-    isRenameModalOpen: state.isRenameModalOpen,
-    toggleModal: state.toggleModal,
-    toggleDeleteModal: state.toggleDeleteModal,
-    toggleRenameModal: state.toggleRenameModal,
-  }));
+    toggleAddQuizModal
+  } = useModalStore();
 
   /* Fetch Data */
   const { data, error, isValidating, isLoading } = useSWR<QuizData>(
@@ -49,11 +45,6 @@ const EditQuizLayout = () => {
   const quizHeader = data?.quizTitle ?? 'Loading...';
   const questions = data?.questions; // Extract the questions from the fetched data
 
-  /* useEffect(() => {
-    console.log(data);
-  }, [data]);
- */
-
   if (isValidating || isLoading) {
     return <LoadingLayout/>;
   }
@@ -63,6 +54,7 @@ const EditQuizLayout = () => {
   return (
     <div className=" bg-slate-200 h-full min-h-screen pb-24">
       <Container>
+        {/* Modals */}
         {isDeleteModalOpen && (
           <DeleteQuizModal
             isOpen={isDeleteModalOpen}
@@ -73,6 +65,13 @@ const EditQuizLayout = () => {
           <RenameQuizModal
             isOpen={isRenameModalOpen}
             onClose={() => toggleRenameModal(false)}
+          />
+        )}
+        {isAddQuizModalOpen && (
+          <AddQuizModal
+            quizId={String(quizId)}
+            isOpen={isAddQuizModalOpen}
+            onClose={() => toggleAddQuizModal(false)}
           />
         )}
         <QuizHeader headerText={quizHeader} displayScore={false} />
@@ -88,8 +87,9 @@ const EditQuizLayout = () => {
           ))}
         </div>
         <div className="w-full flex justify-center mt-6">
-          <AddButton onClick={()=>{}}/>
+          <AddButton onClick={()=>toggleAddQuizModal(true)}/>
         </div>
+        <SpeedDialButton/>
       </Container>
     </div>
   );

@@ -1,4 +1,4 @@
-import {BiSolidHome, BiSolidCompass, BiSolidUserCircle} from 'react-icons/bi';
+import {BiSolidHome, BiSolidCompass, BiSolidUserCircle , BiPlay} from 'react-icons/bi';
 import { IoMdClose,IoMdArrowBack, IoMdAddCircleOutline} from 'react-icons/io';
 import {AiOutlineQuestionCircle, AiFillDelete, AiOutlineEdit} from 'react-icons/ai';
 
@@ -12,6 +12,7 @@ const Icons = ({type, size, color}:IIcons) => {
   return (
     <div className='text-white'>{
       {
+        play : <BiPlay size={size} color={color}/>, 
         add : <IoMdAddCircleOutline size={size} color={color}/>, 
         edit : <AiOutlineEdit size={size} color={color}/>,
         close: <IoMdClose size={size} color={color}/>,

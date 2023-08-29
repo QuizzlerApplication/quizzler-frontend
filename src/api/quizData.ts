@@ -1,3 +1,4 @@
+import { QuizData, Question } from "@/models/quizzes";
 
 // fetch quiz data from the API
 export async function fetchData(url: string) {
@@ -20,34 +21,33 @@ export async function fetchData(url: string) {
     }
 }
 
-// Add question to api 
-export async function addQuestion(quizId: string, questionData: QuestionData){
-    const url = `/api/quizzes/${quizId}`;
+/* Add Question */
+export async function addQuestion(quizId: string, questionData: Question) {
+    const url = `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`;
     try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(questionData),
-        });
-    
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error);
-        }
-    
-        const data = await response.json();
-        return data;
-    } catch (error ) {
-        // handle err here 
-        if (error instanceof Error) {
-            console.error("An error occurred while fetching quiz data:", error.message);
-            throw error; // Rethrow the error to propagate it further if needed
-        } else {
-            console.error("An unknown error occurred:", error);
-            throw new Error("An unknown error occurred");
-        }
+      // Check for network errors before making the request
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(questionData),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error);
+      }
+    } catch (error) {
+      // Handle error
+      if (error instanceof Error) {
+        console.error("An error occurred while fetching quiz data:", error.message);
+        throw error; // Rethrow the error to propagate it further if needed
+      } else {
+        console.error("An unknown error occurred:", error);
+        throw new Error("An unknown error occurred");
+      }
     }
-  };
+  }
+  
   

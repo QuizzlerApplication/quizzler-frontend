@@ -1,4 +1,4 @@
-interface Question {
+export interface Question {
     _id: string;
     questionTitle: string;
     correct_answer: string;
@@ -10,4 +10,9 @@ export interface QuizData {
     quizTitle: string;
     questions: Question[];
     __v: number;
+}
+
+export interface Answer {
+    answerText: string;
+    isCorrect: boolean;
 }

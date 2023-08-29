@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import BottomNav from '@/components/Dashboard/Navigation/BottomNav';
-import EditQuizLayout from '@/components/EditQuizLayout/EditQuizLayout';
+import EditQuizLayout from '@/components/EditQuiz/EditQuizLayout';
 import Modal from '@/components/Common/Modal/Modal';
 import { useModalStore } from '@/store/useModalStore';
 

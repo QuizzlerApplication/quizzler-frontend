@@ -1,5 +1,5 @@
 import React from 'react'
-import LoadingLayout from '@/components/LoadingLayout/LoadingLayout'
+import LoadingLayout from '@/components/Loading/LoadingLayout'
 
 const loading = () => {
   return (

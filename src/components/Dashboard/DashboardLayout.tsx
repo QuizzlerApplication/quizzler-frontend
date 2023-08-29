@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, {useEffect} from "react";
 import useSWR from "swr";
 import SubHeader from "@/components/Common/SubHeader/SubHeader";
 import Container from "@/components/Common/Container";
@@ -20,6 +20,10 @@ const DashboardLayout = () => {
     }
   );
 
+  useEffect(()=>{
+    console.log(data);
+  },[data]);
+
   // Handle loading and error states
   if (error) {
     return <p>Error: {error.message}</p>;
@@ -27,8 +31,6 @@ const DashboardLayout = () => {
   if (isLoading) {
     return <p>Loading...</p>;
   }
-
-  /* Map over the fetched quiz data and render QuizCard components */
   return (
     <div className="h-full min-h-screen bg-slate-200 ">
       <Container>
@@ -40,12 +42,12 @@ const DashboardLayout = () => {
           md:grid md:grid-cols-2 gap-6 lg:grid-cols-3 3xl:grid-cols-4 xl:gap-7"
         >
           {data ? (
-            data.map((quiz: QuizData, index: number) => (
+            data?.map((quiz: QuizData, index: number) => (
               <QuizCard
                 key={index}
-                topic={quiz.quizTitle}
-                numQuestions={quiz.questions.length}
-                linkTo={`/dashboard/quiz/${quiz._id}`}
+                topic={quiz?.quizTitle}
+                numQuestions={quiz?.questions?.length}
+                linkTo={`/dashboard/quiz/${quiz?._id}`}
               />
             ))
           ) : (

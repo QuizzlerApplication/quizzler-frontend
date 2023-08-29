@@ -1,16 +1,17 @@
-'use client'
-import React, { useEffect, useState } from 'react';
+"use client"
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Container from '../Common/Container';
-import SingleQuizHeader from './SingleQuizHeader';
+import LoadingLayout from '../Loading/LoadingLayout';
 import InformationDisplay from './InformationDisplay/InformationDisplay';
 import { fetchData } from '@/api/quizData';
 import useSWR from 'swr';
 import PrimaryCard from '../Common/Cards/PrimaryCard';
 import TertiaryButton from '../Common/Buttons/TertiaryButton';
-import { QuizData } from '@/models/quizzes';
+import { QuizData, Answer } from '@/models/quizzes';
 import Score from './Score/Score';
 import QuizHeader from '../Common/Header/QuizHeader';
+import { shuffleArray } from '@/utils/shuffleArray';
 
 const SingleQuizLayout: React.FC = () => {
   /* Next Router */
@@ -20,7 +21,8 @@ const SingleQuizLayout: React.FC = () => {
   /* Fetch Data */
   const { data, error, isValidating } = useSWR<QuizData>(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
-    fetchData, {
+    fetchData,
+    {
       revalidateOnFocus: false,
       refreshInterval: 300000,
     }
@@ -30,17 +32,15 @@ const SingleQuizLayout: React.FC = () => {
   /* State */
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
-  const [score, setScore] = useState<{ correct: number; incorrect: number }>({
-    correct: 0,
-    incorrect: 0,
-  });
+  const [score, setScore] = useState<{ correct: number; incorrect: number }>({ correct: 0, incorrect: 0 });
+  const [questions, setQuestions] = useState<Answer[]>([]);
 
   /* Variables */
   const currentQuestion = data?.questions[currentQuestionIndex];
-  const endOfQuiz = (currentQuestionIndex === data?.questions.length);
-  const finalScore = score.correct - score.incorrect
+  const endOfQuiz = currentQuestionIndex === data?.questions.length;
+  const finalScore = score.correct - score.incorrect;
 
-  function handleAnswerClick (isCorrect: boolean, answerIndex: number) {
+  function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
     setSelectedAnswerIndex(answerIndex);
     if (isCorrect) {
       setScore((prevScore) => ({ ...prevScore, correct: prevScore.correct + 1 }));
@@ -51,10 +51,31 @@ const SingleQuizLayout: React.FC = () => {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       setSelectedAnswerIndex(null);
     }, 1500);
-  };
+  }
+
+  useEffect(() => {
+    if (currentQuestion) {
+      const formattedAnswers = [
+        ...currentQuestion.incorrect_answers.map((answer) => ({
+          answerText: answer,
+          isCorrect: false,
+        })),
+        {
+          answerText: currentQuestion.correct_answer,
+          isCorrect: true,
+        },
+      ];
+
+      setQuestions(shuffleArray(formattedAnswers));
+    }
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (isValidating) {
-    return <div>Loading...</div>;
+    return <LoadingLayout />;
   }
   if (error) {
     return <div>Error fetching data</div>;
@@ -68,27 +89,27 @@ const SingleQuizLayout: React.FC = () => {
             <InformationDisplay />
             <div className='mt-8'>
               {currentQuestion && (
-                <PrimaryCard question={`${currentQuestionIndex+1}. ${currentQuestion.questionTitle}`} />
+                <PrimaryCard question={`${currentQuestionIndex + 1}. ${currentQuestion.questionTitle}`} />
               )}
-              <div className="mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
-                {currentQuestion &&
-                  currentQuestion.incorrect_answers.map((answer, index) => (
+              {currentQuestion && (
+                <div className='mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0'>
+                  {questions.map((answer, index) => (
                     <TertiaryButton
                       key={index}
-                      label={answer}
-                      onClick={() => handleAnswerClick(false, index)}
-                      answerState={selectedAnswerIndex === index ? 'incorrect' : null}
+                      label={answer.answerText}
+                      onClick={() => handleAnswerClick(answer.isCorrect, index)}
+                      answerState={
+                        selectedAnswerIndex === index
+                          ? answer.isCorrect
+                            ? 'correct'
+                            : 'incorrect'
+                          : null
+                      }
                     />
                   ))}
-                {currentQuestion && (
-                  <TertiaryButton
-                    label={currentQuestion.correct_answer}
-                    onClick={() => handleAnswerClick(true, currentQuestion.incorrect_answers.length)}
-                    answerState={selectedAnswerIndex === currentQuestion.incorrect_answers.length ? 'correct' : null}
-                  />
-                )}
-                {endOfQuiz && <Score score={finalScore} onTryAgain={()=>{}}/>}
-              </div>
+                </div>
+              )}
+              {endOfQuiz && <Score score={finalScore} onTryAgain={() => {}} />}
             </div>
           </Container>
         )}

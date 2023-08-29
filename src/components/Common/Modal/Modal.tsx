@@ -6,14 +6,13 @@ interface ModalProps {
     children: React.ReactNode;
 }
 
-interface QuizModalProps{
+export interface QuizModalProps{
     isOpen: boolean;
     onClose: () => void;
 }
 
 const Modal = ({ isOpen, onClose, children }:ModalProps) => {
     if (!isOpen) return null;
-
     return (
         <div className="fixed inset-0 z-10 flex items-center justify-center overflow-x-hidden overflow-y-auto">
             <div className="fixed inset-0 transition-opacity" aria-hidden="true" onClick={onClose}>
@@ -82,5 +81,6 @@ export const RenameQuizModal = ({ isOpen, onClose }:QuizModalProps) => {
         </Modal>
     );
 };
+
 
 export default Modal;

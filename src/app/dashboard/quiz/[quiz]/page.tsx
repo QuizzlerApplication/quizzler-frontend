@@ -1,4 +1,4 @@
-import SingleQuizLayout from "@/components/SingleQuizLayout/SingleQuizLayout";
+import SingleQuizLayout from "@/components/SingleQuiz/SingleQuizLayout";
 import BottomNav from "@/components/Dashboard/Navigation/BottomNav";
 
 const quizDetail = () => {
