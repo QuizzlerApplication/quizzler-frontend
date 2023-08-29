@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface TertiaryButtonProps {
+interface AnswerButtonProps {
   label: string;
   onClick: () => void;
   answerState: 'correct' | 'incorrect' | null;
 }
 
-const TertiaryButton: React.FC<TertiaryButtonProps> = ({ label, onClick, answerState }) => {
+const AnswerButton: React.FC<AnswerButtonProps> = ({ label, onClick, answerState }) => {
   let buttonClassName = "text-white font-semibold py-2 px-4 rounded-lg text-md sm:text-md ";
   
   let gradientClassName = "";
@@ -33,4 +33,4 @@ const TertiaryButton: React.FC<TertiaryButtonProps> = ({ label, onClick, answerS
   );
 };
 
-export default TertiaryButton;
+export default AnswerButton;
