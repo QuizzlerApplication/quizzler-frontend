@@ -11,7 +11,8 @@ import TertiaryButton from '../Common/Buttons/TertiaryButton';
 import { QuizData, Answer } from '@/models/quizzes';
 import Score from './Score/Score';
 import QuizHeader from '../Common/Header/QuizHeader';
-import { shuffleArray } from '@/utils/shuffleArray';
+import { useFormattedQuestions } from '@/hooks/useFormattedQuestion';
+import { useAnswerClickHandler } from '@/utils/useAnswerClickHandeller';
 
 const SingleQuizLayout: React.FC = () => {
   /* Next Router */
@@ -33,42 +34,18 @@ const SingleQuizLayout: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [score, setScore] = useState<{ correct: number; incorrect: number }>({ correct: 0, incorrect: 0 });
-  const [questions, setQuestions] = useState<Answer[]>([]);
-
+  
   /* Variables */
   const currentQuestion = data?.questions[currentQuestionIndex];
   const endOfQuiz = currentQuestionIndex === data?.questions.length;
   const finalScore = score.correct - score.incorrect;
+  const questions = useFormattedQuestions(currentQuestion || null);
+  const handleAnswerClick = useAnswerClickHandler(
+    setScore,
+    setCurrentQuestionIndex,
+    setSelectedAnswerIndex
+  );
 
-  function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
-    setSelectedAnswerIndex(answerIndex);
-    if (isCorrect) {
-      setScore((prevScore) => ({ ...prevScore, correct: prevScore.correct + 1 }));
-    } else {
-      setScore((prevScore) => ({ ...prevScore, incorrect: prevScore.incorrect + 1 }));
-    }
-    setTimeout(() => {
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-      setSelectedAnswerIndex(null);
-    }, 1500);
-  }
-
-  useEffect(() => {
-    if (currentQuestion) {
-      const formattedAnswers = [
-        ...currentQuestion.incorrect_answers.map((answer) => ({
-          answerText: answer,
-          isCorrect: false,
-        })),
-        {
-          answerText: currentQuestion.correct_answer,
-          isCorrect: true,
-        },
-      ];
-
-      setQuestions(shuffleArray(formattedAnswers));
-    }
-  }, [currentQuestion]);
 
   useEffect(() => {
     console.log(data);
