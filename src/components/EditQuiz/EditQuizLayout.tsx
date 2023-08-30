@@ -15,6 +15,8 @@ import QuizHeader from "../Common/Header/QuizHeader";
 import SpeedDialButton from "../Common/Buttons/SpeedDialButton";
 import AddQuestionModal from "../Common/Modal/AddQuestionModal";
 import EditQuestionModal from "../Common/Modal/EditQuestionModal";
+import { useQuestionStore } from "@/store/useQuestionStore";
+
 
 const EditQuizLayout = () => {
   /* Next Router */
@@ -34,6 +36,8 @@ const EditQuizLayout = () => {
     toggleAddQuizModal,
     toggleEditQuestionModal
   } = useModalStore();
+
+  const { editQuestionId } = useQuestionStore();
 
   /* Fetch Data */
   const { data, error, isValidating, isLoading } = useSWR<QuizData>(
@@ -84,10 +88,10 @@ const EditQuizLayout = () => {
             onClose={() => toggleAddQuizModal(false)}
           />
         )}
-        {isEditQuestionModalOpen && (
+        {isEditQuestionModalOpen && editQuestionId && questions && (
           <EditQuestionModal
-            questionData={questions} /*  */
-            quizId={String(quizId)}
+            questionData={questions.find(question => question._id === editQuestionId)} /* Find the specific question */
+            questionId={String(editQuestionId)}
             isOpen={isEditQuestionModalOpen}
             onClose={() => toggleEditQuestionModal(false)}
           />

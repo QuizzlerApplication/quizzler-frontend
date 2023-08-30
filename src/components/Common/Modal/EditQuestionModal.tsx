@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { editQuestion } from '@/api/questionData'; // Import the function to update a question
+import { editQuestion } from '@/api/questionData';
 import { Question } from '@/models/quizzes';
 import Modal from './Modal';
 import CloseButton from '../Buttons/CloseButton';
 import { useQuestionStore } from '@/store/useQuestionStore';
 
 interface EditQuestionModalProps {
-  quizId: string;
-  questionData: Question; // Existing question data to edit
+  questionId: string;
+  questionData: Question | undefined; // Existing question data to edit
   isOpen: boolean;
   onClose: () => void;
 }
 
-const EditQuestionModal = ({ quizId, questionData, isOpen, onClose }: EditQuestionModalProps) => {
+const EditQuestionModal = ({ questionId, questionData, isOpen, onClose }: EditQuestionModalProps) => {
   const { editQuestionData, setEditQuestionData } = useQuestionStore();
   const [newQuestionData, setNewQuestionData] = useState<Question | null>(editQuestionData);
 
@@ -21,17 +21,24 @@ const EditQuestionModal = ({ quizId, questionData, isOpen, onClose }: EditQuesti
   }, [editQuestionData]);
 
   const handleInputChange = (inputName: string, value: string) => {
-    setNewQuestionData(prevData => ({
-      ...prevData,
-      [inputName]: value,
-    }));
+    setNewQuestionData((prevData) => {
+      if (prevData) {
+        return {
+          ...prevData,
+          [inputName]: value,
+        };
+      }
+      return prevData;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await editQuestion(newQuestionData, quizId); // Update the question
-      onClose();
+      if (newQuestionData) {
+        await editQuestion(questionId, newQuestionData); // Update the question
+        onClose();
+      }
     } catch (error) {
       console.error('Error updating question:', error);
     }
@@ -59,7 +66,7 @@ const EditQuestionModal = ({ quizId, questionData, isOpen, onClose }: EditQuesti
           value={newQuestionData?.correct_answer || ''}
           onChange={(e) => handleInputChange('correct_answer', e.target.value)}
           className="mb-2 p-2 border rounded-lg w-full"
-          disabled={questionData.correct_answer === 'True'}
+          disabled={newQuestionData?.correct_answer === 'True'}
         />
         {/* Incorrect Answers */}
         {newQuestionData?.incorrect_answers?.map((answer, index) => (
@@ -69,12 +76,11 @@ const EditQuestionModal = ({ quizId, questionData, isOpen, onClose }: EditQuesti
             placeholder={`Answer ${index + 1}`}
             value={answer}
             onChange={(e) => {
-              const newIncorrectAnswers = [...newQuestionData?.incorrect_answers || []];
+              const newIncorrectAnswers =  [...(newQuestionData?.incorrect_answers || [])];
               newIncorrectAnswers[index] = e.target.value;
-              handleInputChange('incorrect_answers', newIncorrectAnswers);
+              handleInputChange('incorrect_answers', String(newIncorrectAnswers));
             }}
             className="mb-2 p-2 border rounded-lg w-full"
-            disabled={questionData.correct_answer === 'True'}
           />
         ))}
         <button
@@ -84,7 +90,6 @@ const EditQuestionModal = ({ quizId, questionData, isOpen, onClose }: EditQuesti
         >
           Update Question
         </button>
-        
       </form>
     </Modal>
   );

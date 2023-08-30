@@ -16,12 +16,12 @@ interface DisplayCardProps {
 const DisplayCard: React.FC<DisplayCardProps> = ({ id, questionTitle, questionAnswers, questionData }) => {
 
   const { isEditQuestionModalOpen, toggleEditQuestionModal } = useModalStore();  
-  const { editQuestionData, editQuizId, setEditQuizId, setEditQuestionData } = useQuestionStore();
+  const { editQuestionData, editQuestionId, setEditQuestionId, setEditQuestionData } = useQuestionStore();
 
   function onClickHandeller(){
     toggleEditQuestionModal(!isEditQuestionModalOpen);
     setEditQuestionData(questionData);
-    setEditQuizId(id);
+    setEditQuestionId(id);
   }
 
   return (
@@ -45,3 +45,5 @@ const DisplayCard: React.FC<DisplayCardProps> = ({ id, questionTitle, questionAn
 };
 
 export default DisplayCard;
+
+
