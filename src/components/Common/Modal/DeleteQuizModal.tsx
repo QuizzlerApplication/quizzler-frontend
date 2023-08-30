@@ -1,7 +1,8 @@
-import { useRouter } from "next/router"; // Import the useRouter hook
+import { useRouter } from "next/navigation"; // Import the useRouter hook
 import { QuizModalProps } from "./Modal";
 import Modal from "./Modal";
 import { deleteQuiz } from "@/api/quizData";
+import CloseButton from "../Buttons/CloseButton";
 
 export const DeleteQuizModal = ({ quizId, isOpen, onClose }: QuizModalProps) => {
     const router = useRouter(); // Initialize the useRouter hook
@@ -20,7 +21,10 @@ export const DeleteQuizModal = ({ quizId, isOpen, onClose }: QuizModalProps) => 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <div>
-                <h2 className="text-xl font-semibold mb-4">Delete Quiz</h2>
+                <div className="flex justify-between items-start">
+                    <h2 className="text-xl font-semibold mb-4">Delete Quiz</h2>
+                    <CloseButton onClick={onClose}/>
+                </div>
                 <p>Are you sure you want to delete this quiz?</p>
                 <button className="bg-red-500 text-white px-4 py-2 mt-4" onClick={onClose}>
                     Cancel

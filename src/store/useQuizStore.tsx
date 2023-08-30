@@ -2,6 +2,7 @@ import create from 'zustand';
 
 type State = {
   isHelpOpen: boolean;
+  
 };
 
 type Actions = {

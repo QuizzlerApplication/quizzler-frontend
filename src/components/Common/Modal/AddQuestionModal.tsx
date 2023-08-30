@@ -38,8 +38,10 @@ const AddQuestionModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
   // Component UI
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-        
-      <h2 className="text-xl font-semibold mb-4">Add New Question</h2>
+      <div className=" flex items-start justify-between">
+        <h2 className="text-xl font-semibold mb-4">Add New Question</h2>
+        <CloseButton onClick={onClose} />
+      </div>
       <form onSubmit={handleSubmit}>
         {/* Question Title */}
         <input
@@ -51,7 +53,7 @@ const AddQuestionModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
         />
 
         {/* Question Type */}
-        <select
+        {/* <select
           value={questionData.correct_answer === 'True' ? 'truefalse' : 'other'}
           onChange={(e) => {
             if (e.target.value === 'truefalse') {
@@ -72,7 +74,7 @@ const AddQuestionModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
         >
           <option value="truefalse">True/False</option>
           <option value="other">Other</option>
-        </select>
+        </select> */}
 
         {/* Correct Answer */}
         <input

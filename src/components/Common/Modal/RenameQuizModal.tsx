@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { QuizModalProps } from "./Modal";
 import Modal from "./Modal";
 import { renameQuiz } from "@/api/quizData";
+import CloseButton from "../Buttons/CloseButton";
 
 export const RenameQuizModal = ({ quizId, isOpen, onClose }: QuizModalProps) => {
     const [newTitle, setNewTitle] = useState('');
@@ -22,7 +23,10 @@ export const RenameQuizModal = ({ quizId, isOpen, onClose }: QuizModalProps) => 
             onClose();
         }}>
             <div>
-                <h2 className="text-xl font-semibold mb-4">Rename Quiz</h2>
+                <div className="flex justify-between items-start">
+                    <h2 className="text-xl font-semibold mb-4">Rename Quiz</h2>
+                    <CloseButton onClick={onClose}/>
+                </div>
                 <input
                     type="text"
                     placeholder="New Quiz Title"

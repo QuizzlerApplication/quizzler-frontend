@@ -86,6 +86,7 @@ const EditQuizLayout = () => {
         )}
         {isEditQuestionModalOpen && (
           <EditQuestionModal
+            questionData={questions} /*  */
             quizId={String(quizId)}
             isOpen={isEditQuestionModalOpen}
             onClose={() => toggleEditQuestionModal(false)}
@@ -101,6 +102,7 @@ const EditQuizLayout = () => {
               questionAnswers={[
                 ...question?.incorrect_answers, question?.correct_answer,
               ]}
+              questionData={question}
             />
           ))}
         </div>
