@@ -69,19 +69,23 @@ const EditQuestionModal = ({ questionId, questionData, isOpen, onClose }: EditQu
           disabled={newQuestionData?.correct_answer === 'True'}
         />
         {/* Incorrect Answers */}
-        {newQuestionData?.incorrect_answers?.map((answer, index) => (
-          <input
-            key={index}
-            type="text"
-            placeholder={`Answer ${index + 1}`}
-            value={answer}
-            onChange={(e) => {
-              const newIncorrectAnswers =  [...(newQuestionData?.incorrect_answers || [])];
-              newIncorrectAnswers[index] = e.target.value;
-              handleInputChange('incorrect_answers', String(newIncorrectAnswers));
-            }}
-            className="mb-2 p-2 border rounded-lg w-full"
-          />
+        {Array.isArray(newQuestionData?.incorrect_answers) &&
+          newQuestionData?.incorrect_answers.map((answer, index) => (
+            <input
+              key={index}
+              type="text"
+              placeholder={`Answer ${index + 1}`}
+              value={answer}
+              onChange={(e) => {
+                const newIncorrectAnswers = [...(newQuestionData?.incorrect_answers || [])];
+                newIncorrectAnswers[index] = e.target.value;
+                setNewQuestionData(prevData => ({
+                  ...prevData,
+                  incorrect_answers: newIncorrectAnswers,
+                }));
+              }}
+              className="mb-2 p-2 border rounded-lg w-full"
+            />
         ))}
         <button
           type="submit"
