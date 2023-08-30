@@ -2,7 +2,7 @@ import React from 'react';
 import Icons from '../Icons';
 
 interface CloseButtonProps {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: (event:any) => void;
 }
 
 const CloseButton: React.FC<CloseButtonProps> = ({ onClick }) => {

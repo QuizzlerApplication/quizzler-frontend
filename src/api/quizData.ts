@@ -1,4 +1,5 @@
-import { QuizData, Question } from "@/models/quizzes";
+// Define the base URL for your API
+const API_BASE_URL = process.env.API_BASE_URL;
 
 // fetch quiz data from the API
 export async function fetchData(url: string) {
@@ -21,33 +22,26 @@ export async function fetchData(url: string) {
     }
 }
 
-/* Add Question */
-export async function addQuestion(quizId: string, questionData: Question) {
-    const url = `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`;
+// Function to rename a quiz
+export async function renameQuiz(quizId:string, newQuizTitle:string) {
+    const url = `${API_BASE_URL}/quizzes/${quizId}`;
+    
     try {
-      // Check for network errors before making the request
       const response = await fetch(url, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(questionData),
+        body: JSON.stringify({ quizTitle: newQuizTitle }),
       });
   
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
+      if (response.status === 200) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error('Failed to rename quiz');
       }
     } catch (error) {
-      // Handle error
-      if (error instanceof Error) {
-        console.error("An error occurred while fetching quiz data:", error.message);
-        throw error; // Rethrow the error to propagate it further if needed
-      } else {
-        console.error("An unknown error occurred:", error);
-        throw new Error("An unknown error occurred");
-      }
+      throw new Error('An error occurred while renaming the quiz');
     }
   }
-  
-  

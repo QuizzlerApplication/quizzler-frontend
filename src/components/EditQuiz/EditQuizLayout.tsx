@@ -5,7 +5,8 @@ import { useParams } from "next/navigation";
 import Container from "../Common/Container";
 import { QuizData } from "@/models/quizzes";
 import PrimaryCard from "../Common/Cards/PrimaryCard";
-import { DeleteQuizModal, RenameQuizModal } from "../Common/Modal/Modal";
+import { DeleteQuizModal } from "../Common/Modal/DeleteQuizModal";
+import { RenameQuizModal } from "../Common/Modal/RenameQuizModal";
 import { useModalStore } from "@/store/useModalStore";
 import DisplayCard from "../Common/Cards/DisplayCard";
 import AddButton from "../Common/Buttons/AddButton";
@@ -40,6 +41,10 @@ const EditQuizLayout = () => {
       refreshInterval: 300000,
     }
   );
+
+  useEffect(()=>{
+    console.log(data)
+  },[data])
 
   /* Variables */
   const quizHeader = data?.quizTitle ?? 'Loading...';
@@ -79,6 +84,7 @@ const EditQuizLayout = () => {
           {questions?.map((question) => (
             <DisplayCard
               key={question?._id}
+              id={question?._id}
               questionTitle={question?.questionTitle}
               questionAnswers={[
                 ...question?.incorrect_answers, question?.correct_answer,
