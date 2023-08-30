@@ -1,7 +1,7 @@
 import { Question } from "@/models/quizzes";
 
 // Define the base URL for your API
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 /* Add Question */
 export async function addQuestion(quizId: string, questionData: Question) {

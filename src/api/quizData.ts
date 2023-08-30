@@ -1,5 +1,5 @@
 // Define the base URL for your API
-const API_BASE_URL = process.env.API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // fetch quiz data from the API
 export async function fetchData(url: string) {

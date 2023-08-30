@@ -62,12 +62,14 @@ const EditQuizLayout = () => {
         {/* Modals */}
         {isDeleteModalOpen && (
           <DeleteQuizModal
+            quizId = {String(quizId)}
             isOpen={isDeleteModalOpen}
             onClose={() => toggleDeleteModal(false)}
           />
         )}
         {isRenameModalOpen && (
           <RenameQuizModal
+            quizId = {String(quizId)}
             isOpen={isRenameModalOpen}
             onClose={() => toggleRenameModal(false)}
           />

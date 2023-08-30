@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { QuizModalProps } from "./Modal";
 import Modal from "./Modal";
+import { renameQuiz } from "@/api/quizData";
 
-export const RenameQuizModal = ({ isOpen, onClose }:QuizModalProps) => {
+export const RenameQuizModal = ({quizId, isOpen, onClose }:QuizModalProps) => {
+
     const [newTitle, setNewTitle] = useState('');
 
-    const handleRename = () => {
-        // Call a function to update the quiz title with newTitle
-        // ...
+    const handleRename = (id:string , title:string) => {
+        renameQuiz(id, title)
         onClose();
     };
 
@@ -22,10 +23,14 @@ export const RenameQuizModal = ({ isOpen, onClose }:QuizModalProps) => {
                     onChange={(e) => setNewTitle(e.target.value)}
                     className="border rounded p-2 mb-4 w-full"
                 />
-                <button className="bg-red-500 text-white px-4 py-2 mt-4" onClick={onClose}>
+                <button className="bg-red-500 text-white px-4 py-2 mt-4" 
+                    onClick={onClose}
+                >
                     Cancel
                 </button>
-                <button className="bg-blue-500 text-white px-4 py-2 mt-4 ml-4" onClick={handleRename}>
+                <button className="bg-blue-500 text-white px-4 py-2 mt-4 ml-4" 
+                    onClick={()=>handleRename(quizId, newTitle )}
+                >
                     Rename
                 </button>
             </div>

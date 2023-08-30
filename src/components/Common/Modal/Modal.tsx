@@ -8,6 +8,7 @@ interface ModalProps {
 export interface QuizModalProps{
     isOpen: boolean;
     onClose: () => void;
+    quizId: string ;
 }
 
 const Modal = ({ isOpen, onClose, children }:ModalProps) => {
