@@ -7,10 +7,11 @@ import SecondaryButton from '@/components/Common/Buttons/SecondaryButton';
 interface QuizCardProps {
   topic: string;
   numQuestions: number;
-  linkTo:string
+  linkTo:string;
+  numCorrectQuestions : number;
 }
 
-const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
+const QuizCard = ({ topic, numQuestions,linkTo, numCorrectQuestions }:QuizCardProps) => {
 
     return (
         <motion.div  whileHover={{ scale: 1.05 }}
@@ -20,11 +21,11 @@ const QuizCard = ({ topic, numQuestions,linkTo }:QuizCardProps) => {
                     <div
                         className="w-5 h-5 rounded-full mr-3  flex-none bg-gradient-to-r from-indigo-500 to-purple-500 "
                     ></div>
-                    <div className='ml-3 flex-grow md:w-32 '>
-                        <h3 className="text-lg font-semibold truncate ">{topic}</h3>
-                        <p className="text-md font-regular mb-1">{`${numQuestions}/${numQuestions}`}</p>
+                    <div className='ml-3 flex-grow w-2 md:w-32 '>
+                        <h3 className="text-lg font-semibold truncate">{topic}</h3>
+                        <p className="text-md font-regular mb-1">{`${numCorrectQuestions}/${numQuestions}`}</p>
                     </div>
-                    <div className="space-x-4 flex flex-col xs:flex-row justify-end items-center">
+                    <div className="space-x-2 flex flex-col xs:flex-row justify-end items-center">
                         <Link href={`${linkTo}/edit`}>
                             <SecondaryButton label='Edit' onClick={()=>{123}}/>
                         </Link>

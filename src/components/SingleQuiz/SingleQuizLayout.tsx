@@ -13,7 +13,7 @@ import Score from './Score/Score';
 import QuizHeader from '../Common/Header/QuizHeader';
 import { useFormattedQuestions } from '@/hooks/useFormattedQuestion';
 import { useAnswerClickHandler } from '@/utils/useAnswerClickHandeller';
-
+import { throttle } from 'lodash';
 const SingleQuizLayout: React.FC = () => {
   /* Next Router */
   const params = useParams();
@@ -34,6 +34,7 @@ const SingleQuizLayout: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [score, setScore] = useState<{ correct: number; incorrect: number }>({ correct: 0, incorrect: 0 });
+  const [buttonClicked, setButtonClicked] = useState<boolean>(false);
   
   // Get the current question from the quiz data
   const currentQuestion = data?.questions[currentQuestionIndex];
@@ -42,10 +43,28 @@ const SingleQuizLayout: React.FC = () => {
 
   // Use custom hooks for formatted questions and answer click handling
   const questions = useFormattedQuestions(currentQuestion || null);
-  const handleAnswerClick = useAnswerClickHandler(
-    setScore,
-    setCurrentQuestionIndex,
-    setSelectedAnswerIndex
+  
+  // Use throttle
+  const throttledHandleAnswerClick = throttle(
+    function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
+      if (buttonClicked) {
+        return; // Ignore the click if buttonClicked is already true
+      }
+      setSelectedAnswerIndex(answerIndex);
+      setScore((prevScore) => ({
+        ...prevScore,
+        correct: isCorrect ? prevScore.correct + 1 : prevScore.correct,
+        incorrect: isCorrect ? prevScore.incorrect : prevScore.incorrect + 1,
+      }));
+      setButtonClicked(true); // Set the buttonClicked state to true
+      setTimeout(() => {
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        setSelectedAnswerIndex(null);
+        setButtonClicked(false); // Reset the buttonClicked state after the delay
+      }, 1000);
+    },
+    400, // Set the throttle delay in milliseconds (adjust as needed)
+    { trailing: false } // Set trailing to false to ignore subsequent events during the throttle window
   );
 
   useEffect(() => {
@@ -60,7 +79,7 @@ const SingleQuizLayout: React.FC = () => {
     return <div>Error fetching data</div>;
   }
   return (
-    <div className='bg-slate-200 h-full min-h-screen'>
+    <div className='bg-slate-200 h-full min-h-screen pb-32'>
       <Container>
         {data && (
           <Container>
@@ -72,11 +91,11 @@ const SingleQuizLayout: React.FC = () => {
               )}
               {currentQuestion && (
                 <div className='mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0'>
-                  {questions.map((answer :Answer, index:number) => (
+                  {questions.map((answer:Answer, index:number) => (
                     <AnswerButton
                       key={index}
                       label={answer.answerText}
-                      onClick={() => handleAnswerClick(answer.isCorrect, index)}
+                      onClick={() => throttledHandleAnswerClick(answer.isCorrect, index)}
                       answerState={
                         selectedAnswerIndex === index
                           ? answer.isCorrect

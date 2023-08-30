@@ -6,10 +6,12 @@ export interface Question {
 }
 
 export interface QuizData {
+    __v: number;
     _id: string;
     quizTitle: string;
     questions: Question[];
-    __v: number;
+    numberOfCorrectQuestions: number;
+    numberOfQuestions: number;
 }
 
 export interface Answer {

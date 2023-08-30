@@ -46,13 +46,17 @@ const DashboardLayout = () => {
               <QuizCard
                 key={index}
                 topic={quiz?.quizTitle}
-                numQuestions={quiz?.questions?.length}
+                numQuestions={quiz?.numberOfQuestions}
+                numCorrectQuestions = {quiz?.numberOfCorrectQuestions}
                 linkTo={`/dashboard/quiz/${quiz?._id}`}
               />
             ))
           ) : (
             <p>Loading...</p>
           )}
+        </div>
+        <div className="">
+          <SubHeader text="My Quizzes" size="small" />
         </div>
       </Container>
     </div>

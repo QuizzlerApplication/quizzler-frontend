@@ -59,15 +59,7 @@ const EditQuestionModal = ({ questionId, questionData, isOpen, onClose }: EditQu
           onChange={(e) => handleInputChange('questionTitle', e.target.value)}
           className="mb-2 p-2 border rounded-lg w-full"
         />
-        {/* Correct Answer */}
-        <input
-          type="text"
-          placeholder="Correct Answer"
-          value={newQuestionData?.correct_answer || ''}
-          onChange={(e) => handleInputChange('correct_answer', e.target.value)}
-          className="mb-2 p-2 border rounded-lg w-full"
-          disabled={newQuestionData?.correct_answer === 'True'}
-        />
+        
         {/* Incorrect Answers */}
         {Array.isArray(newQuestionData?.incorrect_answers) &&
           newQuestionData?.incorrect_answers.map((answer, index) => (
@@ -87,6 +79,15 @@ const EditQuestionModal = ({ questionId, questionData, isOpen, onClose }: EditQu
               className="mb-2 p-2 border rounded-lg w-full"
             />
         ))}
+        {/* Correct Answer */}
+        <input
+          type="text"
+          placeholder="Correct Answer"
+          value={newQuestionData?.correct_answer || ''}
+          onChange={(e) => handleInputChange('correct_answer', e.target.value)}
+          className="mb-2 p-2 border rounded-lg w-full "
+          disabled={newQuestionData?.correct_answer === 'True'}
+        />
         <button
           type="submit"
           className="bg-gradient-to-r from-indigo-500 via-purple-500 
