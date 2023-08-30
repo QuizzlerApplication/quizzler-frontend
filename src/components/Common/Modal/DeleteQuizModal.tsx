@@ -1,11 +1,20 @@
+import { useRouter } from "next/router"; // Import the useRouter hook
 import { QuizModalProps } from "./Modal";
 import Modal from "./Modal";
+import { deleteQuiz } from "@/api/quizData";
 
-export const DeleteQuizModal = ({ isOpen, onClose }:QuizModalProps) => {
+export const DeleteQuizModal = ({ quizId, isOpen, onClose }: QuizModalProps) => {
+    const router = useRouter(); // Initialize the useRouter hook
 
-    const handleDelete = () => {
-        
-        onClose();
+    const handleDelete = async () => {
+        try {
+            await deleteQuiz(quizId); // Assuming deleteQuiz returns a promise or can be awaited
+            onClose();
+            router.push("/dashboard"); // Redirect to the dashboard after successful deletion
+        } catch (error) {
+            // Handle error if needed
+            console.error("Error deleting quiz:", error);
+        }
     };
 
     return (

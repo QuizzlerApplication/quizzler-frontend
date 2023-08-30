@@ -45,3 +45,26 @@ export async function renameQuiz(quizId:string, newQuizTitle:string) {
       throw new Error('An error occurred while renaming the quiz');
     }
   }
+
+// Function to delete a quiz
+export async function deleteQuiz(quizId:string) {
+  const url = `${API_BASE_URL}/quizzes/${quizId}`;
+  
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE', // Change method to DELETE
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      return data;
+    } else {
+      throw new Error('Failed to delete quiz'); // Update error message
+    }
+  } catch (error) {
+    throw new Error('An error occurred while deleting the quiz'); // Update error message
+  }
+}

@@ -93,7 +93,7 @@ const AddQuizModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
             value={answer}
             onChange={(e) => {
               const newIncorrectAnswers = [...questionData.incorrect_answers];
-              newIncorrectAnswers[index] = e.target.value;
+              newIncorrectAnswers[index] = e.target.value; // Assign the new value to the correct index
               handleInputChange('incorrect_answers', newIncorrectAnswers);
             }}
             className="mb-2 p-2 border rounded-lg w-full"
