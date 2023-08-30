@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -6,7 +7,14 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import Icons from '../Icons';
 import { useModalStore } from '@/store/useModalStore';
 
+
 export default function SpeedDialTooltipOpen() {
+
+    
+    /* Next Router */
+    const params = useParams();
+    const quizId = params.quiz;
+    const router = useRouter();
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => {
@@ -27,10 +35,15 @@ export default function SpeedDialTooltipOpen() {
         toggleRenameModal(true);
     };
 
+    const handlePlayClick = ()=>{
+        handleClose();
+        router.push(`/dashboard/quiz/${quizId}`);
+    };
+
     const actions = [
         { icon: <Icons type='edit' size={25} color='#7861f3'/>, name: 'Edit', onclick: handleRenameClick },
         { icon: <Icons type='delete' size={25} color='#7861f3'/>, name: 'Delete', onclick :handleDeleteClick  },
-        { icon: <Icons type='play' size={30} color='#7861f3'/>, name: 'Play', onclick : ()=>{} },
+        { icon: <Icons type='play' size={30} color='#7861f3'/>, name: 'Play', onclick : handlePlayClick },
     ];
 
     const {

@@ -22,7 +22,6 @@ export async function fetchData(url: string) {
     }
 }
 
-// Function to rename a quiz
 export async function renameQuiz(quizId:string, newQuizTitle:string) {
     const url = `${API_BASE_URL}/quizzes/${quizId}`;
     
@@ -44,9 +43,8 @@ export async function renameQuiz(quizId:string, newQuizTitle:string) {
     } catch (error) {
       throw new Error('An error occurred while renaming the quiz');
     }
-  }
+}
 
-// Function to delete a quiz
 export async function deleteQuiz(quizId:string) {
   const url = `${API_BASE_URL}/quizzes/${quizId}`;
   
@@ -66,5 +64,28 @@ export async function deleteQuiz(quizId:string) {
     }
   } catch (error) {
     throw new Error('An error occurred while deleting the quiz'); // Update error message
+  }
+}
+
+export async function addQuiz(quizId:string): Promise<void> {
+  const url = `${API_BASE_URL}/quizzes/${quizId}`;
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(quizData),
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log('Quiz added successfully:', data);
+    } else {
+      const errorData = await response.json();
+      console.error('Error adding quiz:', errorData.error);
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
   }
 }
