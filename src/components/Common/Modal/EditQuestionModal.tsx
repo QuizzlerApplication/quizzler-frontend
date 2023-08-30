@@ -1,68 +1,64 @@
-import React, { useState } from 'react';
-import { addQuestion } from '@/api/questionData';
+import React, { useState, useEffect } from 'react';
+import { editQuestion } from '@/api/questionData'; // Import the function to update a question
 import { Question } from '@/models/quizzes';
 import Modal from './Modal';
 import Icons from '../Icons';
 import CloseButton from '../Buttons/CloseButton';
 
-interface AddQuizModalProps {
-  quizId: string;
-  isOpen: boolean;
-  onClose: () => void;
+interface EditQuestionModalProps {
+    quizId: string;
+    questionData: Question; // Existing question data to edit
+    isOpen: boolean;
+    onClose: () => void;
 }
 
-const AddQuizModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
-  const [questionData, setQuestionData] = useState<Question>({
-    _id: quizId,
-    questionTitle: '',
-    correct_answer: '',
-    incorrect_answers: ['', '', ''], // Initialize with 3 empty strings
-  });
+const EditQuestionModal = ({quizId, questionData, isOpen, onClose }: EditQuestionModalProps) => {
+  const [editedQuestionData, setEditedQuestionData] = useState<Question>(questionData);
+
+  useEffect(() => {
+    setEditedQuestionData(questionData);
+  }, [questionData]);
 
   const handleInputChange = (inputName: string, value: string) => {
-    setQuestionData({ ...questionData, [inputName]: value });
+    setEditedQuestionData({ ...editedQuestionData, [inputName]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addQuestion(quizId, questionData);
-      // Handle successful submission, like closing the modal or updating data
+      await editQuestion(editedQuestionData, 123); // Update the question
       onClose();
     } catch (error) {
-      // Handle error
-      console.error('Error adding question:', error);
+      console.error('Error updating question:', error);
     }
   };
 
-  // Component UI
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-        
-      <h2 className="text-xl font-semibold mb-4">Add New Question</h2>
+      <h2 className="text-xl font-semibold mb-4">Edit Question</h2>
       <form onSubmit={handleSubmit}>
         {/* Question Title */}
         <input
           type="text"
           placeholder="Question Title"
-          value={questionData.questionTitle}
+          value={editedQuestionData?.questionTitle}
           onChange={(e) => handleInputChange('questionTitle', e.target.value)}
           className="mb-2 p-2 border rounded-lg w-full"
         />
 
         {/* Question Type */}
         <select
-          value={questionData.correct_answer === 'True' ? 'truefalse' : 'other'}
+          value={editedQuestionData?.correct_answer === 'True' ? 'truefalse' : 'other'}
           onChange={(e) => {
             if (e.target.value === 'truefalse') {
-              setQuestionData({
-                ...questionData,
+              setEditedQuestionData({
+                ...editedQuestionData,
                 correct_answer: 'True',
                 incorrect_answers: ['False'],
               });
             } else {
-              setQuestionData({
-                ...questionData,
+              setEditedQuestionData({
+                ...editedQuestionData,
                 correct_answer: '',
                 incorrect_answers: ['', '', ''],
               });
@@ -78,36 +74,36 @@ const AddQuizModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
         <input
           type="text"
           placeholder="Correct Answer"
-          value={questionData.correct_answer}
+          value={editedQuestionData?.correct_answer}
           onChange={(e) => handleInputChange('correct_answer', e.target.value)}
           className="mb-2 p-2 border rounded-lg w-full"
-          disabled={questionData.correct_answer === 'True'}
+          disabled={editedQuestionData?.correct_answer === 'True'}
         />
 
         {/* Incorrect Answers */}
-        {questionData.incorrect_answers.map((answer, index) => (
+        {editedQuestionData?.incorrect_answers.map((answer, index) => (
           <input
             key={index}
             type="text"
             placeholder={`Answer ${index + 1}`}
             value={answer}
             onChange={(e) => {
-              const newIncorrectAnswers = [...questionData.incorrect_answers];
+              const newIncorrectAnswers = [...editedQuestionData?.incorrect_answers];
               newIncorrectAnswers[index] = e.target.value; // Assign the new value to the correct index
               handleInputChange('incorrect_answers', newIncorrectAnswers);
             }}
             className="mb-2 p-2 border rounded-lg w-full"
-            disabled={questionData.correct_answer === 'True'}
+            disabled={editedQuestionData?.correct_answer === 'True'}
           />
         ))}
 
-        {questionData.incorrect_answers.length < 3 && questionData.correct_answer !== 'True' && (
+        {editedQuestionData?.incorrect_answers.length < 3 && editedQuestionData?.correct_answer !== 'True' && (
           <button
             type="button"
             onClick={() =>
-              setQuestionData({
-                ...questionData,
-                incorrect_answers: [...questionData.incorrect_answers, ''],
+              setEditedQuestionData({
+                ...editedQuestionData,
+                incorrect_answers: [...editedQuestionData?.incorrect_answers, ''],
               })
             }
             className="mb-2 bg-gray-300 py-1 px-2 rounded"
@@ -117,15 +113,15 @@ const AddQuizModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
         )}
 
         <button
-            type="submit"
-            className="bg-gradient-to-r from-indigo-500 via-purple-500 
-            to-purple-500 text-white py-2 px-4 rounded"
+          type="submit"
+          className="bg-gradient-to-r from-indigo-500 via-purple-500 
+          to-purple-500 text-white py-2 px-4 rounded"
         >
-          Add Question
+          Update Question
         </button>
       </form>
     </Modal>
   );
 };
 
-export default AddQuizModal;
+export default EditQuestionModal;

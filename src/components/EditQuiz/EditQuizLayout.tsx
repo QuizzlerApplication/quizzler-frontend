@@ -13,7 +13,8 @@ import AddButton from "../Common/Buttons/AddButton";
 import LoadingLayout from "../Loading/LoadingLayout";
 import QuizHeader from "../Common/Header/QuizHeader";
 import SpeedDialButton from "../Common/Buttons/SpeedDialButton";
-import AddQuizModal from "../Common/Modal/AddQuizModal";
+import AddQuestionModal from "../Common/Modal/AddQuestionModal";
+import EditQuestionModal from "../Common/Modal/EditQuestionModal";
 
 const EditQuizLayout = () => {
   /* Next Router */
@@ -26,10 +27,12 @@ const EditQuizLayout = () => {
     isDeleteModalOpen,
     isRenameModalOpen,
     isAddQuizModalOpen,
+    isEditQuestionModalOpen,
     toggleModal,
     toggleDeleteModal,
     toggleRenameModal,
-    toggleAddQuizModal
+    toggleAddQuizModal,
+    toggleEditQuestionModal
   } = useModalStore();
 
   /* Fetch Data */
@@ -75,10 +78,17 @@ const EditQuizLayout = () => {
           />
         )}
         {isAddQuizModalOpen && (
-          <AddQuizModal
+          <AddQuestionModal
             quizId={String(quizId)}
             isOpen={isAddQuizModalOpen}
             onClose={() => toggleAddQuizModal(false)}
+          />
+        )}
+        {isEditQuestionModalOpen && (
+          <EditQuestionModal
+            quizId={String(quizId)}
+            isOpen={isEditQuestionModalOpen}
+            onClose={() => toggleEditQuestionModal(false)}
           />
         )}
         <QuizHeader headerText={quizHeader} displayScore={false} />
