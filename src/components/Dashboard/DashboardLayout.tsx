@@ -7,6 +7,8 @@ import QuizCard from "./Cards/QuizCard";
 import DashBoardMenu from "./DashBoardMenu/DashBoardMenu";
 import { QuizData } from "@/models/quizzes";
 import { fetchData } from "@/api/quizData";
+import SideDrawer from "../Common/SideDrawer/SideDrawer";
+import { useSideDrawerStore } from "@/store/useSideDrawerStore";
 
 const DashboardLayout = () => {
   
@@ -19,6 +21,8 @@ const DashboardLayout = () => {
       refreshInterval: 300000, // Refresh data every 5 minutes
     }
   );
+
+  const {isAddQuizSideDrawerOpen, toggleAddQuizSideDrawer} = useSideDrawerStore();
 
   useEffect(()=>{
     console.log(data);
@@ -59,6 +63,7 @@ const DashboardLayout = () => {
           <SubHeader text="My Quizzes" size="small" />
         </div>
       </Container>
+      <SideDrawer open={isAddQuizSideDrawerOpen} />
     </div>
   );
 };
