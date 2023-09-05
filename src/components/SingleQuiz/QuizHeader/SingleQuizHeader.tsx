@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Icons from '../Common/Icons';
+import Icons from '../../Common/Icons';
 import Link from 'next/link';
 import { useQuizStore } from '@/store/useQuizStore';
 

@@ -19,7 +19,7 @@ const AddQuestionModal = ({ quizId, isOpen, onClose }: AddQuizModalProps) => {
     incorrect_answers: ['', '', ''], // Initialize with 3 empty strings
   });
 
-  const handleInputChange = (inputName: string, value: string) => {
+  const handleInputChange = (inputName: string, value: string | string[]) => {
     setQuestionData({ ...questionData, [inputName]: value });
   };
 

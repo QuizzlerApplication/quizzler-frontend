@@ -3,6 +3,7 @@ export interface Question {
     questionTitle: string;
     correct_answer: string;
     incorrect_answers: string[];
+    isCorrect: boolean;
 }
 
 export interface QuizData {
@@ -18,3 +19,9 @@ export interface Answer {
     answerText: string;
     isCorrect: boolean;
 }
+
+export interface QuizResponseData {
+    error?: string;
+    // Add other properties as needed
+  }
+

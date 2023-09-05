@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { Question, QuizResponseData } from '@/models/quizzes';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -21,7 +22,7 @@ export async function fetchData(url: string): Promise<any> {
 
 export async function renameQuiz(quizId: string, newQuizTitle: string): Promise<any> {
   const url = `${API_BASE_URL}/quizzes/${quizId}`;
-  
+
   try {
     return handleRequest(axios.put(url, { quizTitle: newQuizTitle }, { headers: { 'Content-Type': 'application/json' } }));
   } catch (error) {
@@ -31,7 +32,7 @@ export async function renameQuiz(quizId: string, newQuizTitle: string): Promise<
 
 export async function deleteQuiz(quizId: string): Promise<any> {
   const url = `${API_BASE_URL}/quizzes/${quizId}`;
-  
+
   try {
     return handleRequest(axios.delete(url, { headers: { 'Content-Type': 'application/json' } }));
   } catch (error) {
@@ -41,11 +42,31 @@ export async function deleteQuiz(quizId: string): Promise<any> {
 
 export async function addQuiz(quizData: any): Promise<void> {
   const url = `${API_BASE_URL}/quizzes`;
-  
+
   try {
     await handleRequest(axios.post(url, quizData, { headers: { 'Content-Type': 'application/json' } }));
     console.log('Quiz added successfully');
   } catch (error) {
     console.error('An error occurred:', error);
+  }
+}
+
+export async function restartQuiz(quizId: string): Promise<QuizResponseData> {
+  const url = `${API_BASE_URL}/quizzes/restart/${quizId}`;
+
+  try {
+    return handleRequest(axios.put(url));
+  } catch (error) {
+    throw new Error('An error occurred while restarting the quiz');
+  }
+}
+
+export async function updateStudyResults(quizId: string, correctQuestions: Question[]): Promise<any> {
+  const url = `${API_BASE_URL}/quizzes/update/${quizId}`;
+
+  try {
+    return handleRequest(axios.put(url, { correctQuestions }));
+  } catch (error) {
+    throw new Error('An error occurred while updating study results');
   }
 }

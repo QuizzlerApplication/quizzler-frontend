@@ -71,6 +71,7 @@ const EditQuestionModal = ({ questionId, questionData, isOpen, onClose }: EditQu
               onChange={(e) => {
                 const newIncorrectAnswers = [...(newQuestionData?.incorrect_answers || [])];
                 newIncorrectAnswers[index] = e.target.value;
+                // @ts-ignore
                 setNewQuestionData(prevData => ({
                   ...prevData,
                   incorrect_answers: newIncorrectAnswers,

@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import Container from '../Common/Container';
 import LoadingLayout from '../Loading/LoadingLayout';
 import InformationDisplay from './InformationDisplay/InformationDisplay';
-import { fetchData } from '@/api/quizData';
+import { fetchData, updateStudyResults } from '@/api/quizData';
 import useSWR from 'swr';
 import PrimaryCard from '../Common/Cards/PrimaryCard';
 import AnswerButton from '../Common/Buttons/AnswerButton';
@@ -12,14 +12,14 @@ import { QuizData, Answer } from '@/models/quizzes';
 import Score from './Score/Score';
 import QuizHeader from '../Common/Header/QuizHeader';
 import { useFormattedQuestions } from '@/hooks/useFormattedQuestion';
-import { useAnswerClickHandler } from '@/utils/useAnswerClickHandeller';
 import { throttle } from 'lodash';
-const SingleQuizLayout: React.FC = () => {
-  /* Next Router */
-  const params = useParams();
-  const quizId = params.quiz;
+import { useQuizStore } from '@/store/useQuizStore';
+import QuizIntro from './QuizIntro/QuizIntro';
 
-  /* Fetch Data */
+const SingleQuizLayout: React.FC = () => {
+  const params = useParams();
+  const quizId = params.quiz.toString();
+
   const { data, error, isValidating, isLoading } = useSWR<QuizData>(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
     fetchData,
@@ -29,26 +29,26 @@ const SingleQuizLayout: React.FC = () => {
     }
   );
 
-  /* TODO if we get to the end of the quiz we want to make put request to update */
-  // State for managing quiz progress and score
+  /* State */
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
   const [score, setScore] = useState<{ correct: number; incorrect: number }>({ correct: 0, incorrect: 0 });
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
-  
-  // Get the current question from the quiz data
+  const { displayQuiz, setDisplayQuiz } = useQuizStore();
   const currentQuestion = data?.questions[currentQuestionIndex];
-  const endOfQuiz = currentQuestionIndex === data?.questions.length;
   const finalScore = score.correct - score.incorrect;
+  const [updatedQuestions, setUpdatedQuestions] = useState<QuizData['questions']>([]);
 
-  // Use custom hooks for formatted questions and answer click handling
+  /* Variables */
   const questions = useFormattedQuestions(currentQuestion || null);
-  
-  // Use throttle
+  const isStartOfQuiz = currentQuestionIndex === 0;
+  const isEndOfQuiz = currentQuestionIndex === data?.questions.length;
+  const isCorrect = questions && 'isCorrect' in questions ? questions.isCorrect : false;
+
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
       if (buttonClicked) {
-        return; // Ignore the click if buttonClicked is already true
+        return;
       }
       setSelectedAnswerIndex(answerIndex);
       setScore((prevScore) => ({
@@ -56,25 +56,49 @@ const SingleQuizLayout: React.FC = () => {
         correct: isCorrect ? prevScore.correct + 1 : prevScore.correct,
         incorrect: isCorrect ? prevScore.incorrect : prevScore.incorrect + 1,
       }));
-      setButtonClicked(true); // Set the buttonClicked state to true
+      setButtonClicked(true);
       setTimeout(() => {
         setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
         setSelectedAnswerIndex(null);
-        setButtonClicked(false); // Reset the buttonClicked state after the delay
+        setButtonClicked(false);
       }, 1000);
     },
-    400, // Set the throttle delay in milliseconds (adjust as needed)
-    { trailing: false } // Set trailing to false to ignore subsequent events during the throttle window
+    400,
+    { trailing: false }
   );
+  
+  useEffect(()=>{
+    console.log(data);
+    setDisplayQuiz(false);
+  },[])
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
 
-  // Render loading state, error message, or quiz content
+    if (isEndOfQuiz) {
+      const updatedQuestionsCopy = [...data?.questions];
+
+      updatedQuestionsCopy.forEach((question, index) => {
+        const isCorrect = index < score.correct;
+        question.isCorrect = isCorrect;
+      });
+
+      setUpdatedQuestions(updatedQuestionsCopy);
+
+      updateStudyResults(quizId, updatedQuestionsCopy)
+        .then((response) => {
+          console.log('Study results updated successfully:', response);
+        })
+        .catch((error) => {
+          console.error('Error updating study results:', error);
+        });
+    }
+  }, [isEndOfQuiz, data, score.correct]);
+
+  /* Loading Isvalidating State */
   if (isValidating || isLoading) {
     return <LoadingLayout />;
   }
+  /* Error State */
   if (error) {
     return <div>Error fetching data</div>;
   }
@@ -86,33 +110,32 @@ const SingleQuizLayout: React.FC = () => {
             <QuizHeader headerText={data?.quizTitle} score={finalScore} displayScore={true} />
             <InformationDisplay />
             <div className='mt-8'>
-              {currentQuestion && (
-                <PrimaryCard question={`${currentQuestionIndex + 1}. ${currentQuestion.questionTitle}`} />
-              )}
-              {currentQuestion && (
-                <div className='mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0'>
-                  {questions.map((answer:Answer, index:number) => (
-                    <AnswerButton
-                      key={index}
-                      label={answer.answerText}
-                      onClick={() => throttledHandleAnswerClick(answer.isCorrect, index)}
-                      answerState={
-                        selectedAnswerIndex === index
-                          ? answer.isCorrect
-                            ? 'correct'
-                            : 'incorrect'
-                          : null
-                      }
+              {!displayQuiz ? (
+                <QuizIntro />
+              ) : (
+                <>
+                  {currentQuestion && (
+                    <PrimaryCard question={`${currentQuestionIndex + 1}. ${currentQuestion.questionTitle}`} />
+                  )}
+                  {currentQuestion && (
+                    <div className='mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0'>
+                      {questions.map((answer: Answer, index: number) => (
+                        <AnswerButton
+                          key={index}
+                          label={answer.answerText}
+                          onClick={() => throttledHandleAnswerClick(answer.isCorrect, index)}
+                          answerState={selectedAnswerIndex === index ? (answer.isCorrect ? 'correct' : 'incorrect') : null}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {isEndOfQuiz && (
+                    <Score
+                      score={finalScore}
+                      onTryAgain={() => setCurrentQuestionIndex(0)}
                     />
-                  ))}
-                </div>
-              )}
-              {/* Render score and try again button at the end of the quiz */}
-              {endOfQuiz && (
-                <Score 
-                  score={finalScore} 
-                  onTryAgain={() => {}} 
-                />
+                  )}
+                </>
               )}
             </div>
           </Container>

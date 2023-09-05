@@ -23,7 +23,7 @@ const QuizCard = ({ topic, numQuestions,linkTo, numCorrectQuestions }:QuizCardPr
                     ></div>
                     <div className='ml-3 flex-grow w-2 md:w-32 '>
                         <h3 className="text-lg font-semibold truncate">{topic}</h3>
-                        <p className="text-md font-regular mb-1">{`${numCorrectQuestions}/${numQuestions}`}</p>
+                        <p className="text-md font-regular mb-1">{`${numCorrectQuestions/numQuestions}% Correct`}</p>
                     </div>
                     <div className="space-x-2 flex flex-col xs:flex-row justify-end items-center">
                         <Link href={`${linkTo}/edit`}>
