@@ -17,8 +17,8 @@ const DashboardLayout = () => {
     "https://quizzlerreactapp.onrender.com/api/quizzes",
     fetchData,
     {
-      revalidateOnFocus: false, // Prevent revalidation on window focus
-      refreshInterval: 300000, // Refresh data every 5 minutes
+      revalidateOnFocus: false,
+      refreshInterval: 300000,
     }
   );
 

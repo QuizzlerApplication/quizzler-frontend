@@ -3,6 +3,7 @@ import { shuffleArray } from '@/utils/shuffleArray';
 import { Answer, Question } from '@/models/quizzes';
 
 export function useFormattedQuestions(currentQuestion: Question | null) {
+
   const [questions, setQuestions] = useState<Answer[]>([]);
 
   useEffect(() => {

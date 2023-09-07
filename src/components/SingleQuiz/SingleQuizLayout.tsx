@@ -8,7 +8,7 @@ import { fetchData, updateStudyResults } from '@/api/quizData';
 import useSWR from 'swr';
 import PrimaryCard from '../Common/Cards/PrimaryCard';
 import AnswerButton from '../Common/Buttons/AnswerButton';
-import { QuizData, Answer } from '@/models/quizzes';
+import { QuizData, Answer, Question } from '@/models/quizzes';
 import Score from './Score/Score';
 import QuizHeader from '../Common/Header/QuizHeader';
 import { useFormattedQuestions } from '@/hooks/useFormattedQuestion';
@@ -17,9 +17,12 @@ import { useQuizStore } from '@/store/useQuizStore';
 import QuizIntro from './QuizIntro/QuizIntro';
 
 const SingleQuizLayout: React.FC = () => {
+
+  /* Extract URL Params */
   const params = useParams();
   const quizId = params.quiz.toString();
 
+  /* Fetch Data */
   const { data, error, isValidating, isLoading } = useSWR<QuizData>(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
     fetchData,
@@ -35,16 +38,16 @@ const SingleQuizLayout: React.FC = () => {
   const [score, setScore] = useState<{ correct: number; incorrect: number }>({ correct: 0, incorrect: 0 });
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
   const { displayQuiz, setDisplayQuiz } = useQuizStore();
+  
   const currentQuestion = data?.questions[currentQuestionIndex];
   const finalScore = score.correct - score.incorrect;
   const [updatedQuestions, setUpdatedQuestions] = useState<QuizData['questions']>([]);
 
   /* Variables */
   const questions = useFormattedQuestions(currentQuestion || null);
-  const isStartOfQuiz = currentQuestionIndex === 0;
+  
   const isEndOfQuiz = currentQuestionIndex === data?.questions.length;
-  const isCorrect = questions && 'isCorrect' in questions ? questions.isCorrect : false;
-
+  
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
       if (buttonClicked) {
@@ -70,7 +73,8 @@ const SingleQuizLayout: React.FC = () => {
   useEffect(()=>{
     console.log(data);
     setDisplayQuiz(false);
-  },[])
+  //@ts-ignore
+  },[data]);
 
   useEffect(() => {
 
@@ -92,7 +96,9 @@ const SingleQuizLayout: React.FC = () => {
           console.error('Error updating study results:', error);
         });
     }
+  //@ts-ignore
   }, [isEndOfQuiz, data, score.correct]);
+
 
   /* Loading Isvalidating State */
   if (isValidating || isLoading) {
