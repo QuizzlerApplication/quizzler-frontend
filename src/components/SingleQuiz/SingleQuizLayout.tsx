@@ -41,34 +41,16 @@ const SingleQuizLayout: React.FC = () => {
     incorrect: 0,
   });
   const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
-  // only use questions that arent already correct in study mode
-  useEffect(() => {
-    if (data) {
-      const filteredQuestions = data.questions.filter(
-        (question) => question.isCorrect === false
-      );
-      setQuizQuestions(filteredQuestions);
-    }
-  }, [data]);
-
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
   const { displayQuiz, setDisplayQuiz } = useQuizStore();
-  const currentQuestion = quizQuestions[currentQuestionIndex];
-  const finalScore = score.correct - score.incorrect;
-
-  const [updatedQuestions, setUpdatedQuestions] = useState<
-    QuizData["questions"]
-  >([]);
 
   /* Variables */
+  const currentQuestion = quizQuestions[currentQuestionIndex];
+  const finalScore = score.correct - score.incorrect;
   const questions = useFormattedQuestions(currentQuestion || null);
-  const isStartOfQuiz = currentQuestionIndex === 0;
   const isEndOfQuiz = currentQuestionIndex === quizQuestions.length;
-  const isCorrect =
-    questions && "isCorrect" in questions ? questions.isCorrect : false;
 
   // Filter the questions when the quiz starts
-
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
       if (buttonClicked) {
@@ -100,22 +82,22 @@ const SingleQuizLayout: React.FC = () => {
     { trailing: false }
   );
 
+  // only use questions that arent already correct in study mode
   useEffect(() => {
-    console.log(data);
+    if (data) {
+      const filteredQuestions = data.questions.filter(
+        (question) => question.isCorrect === false
+      );
+      setQuizQuestions(filteredQuestions);
+    }
+  }, [data]);
+
+  useEffect(() => {
     setDisplayQuiz(false);
   }, []);
 
   useEffect(() => {
     if (isEndOfQuiz) {
-      // const updatedQuestionsCopy = [quizQuestions];
-
-      // updatedQuestionsCopy.forEach((question, index) => {
-      //   const isCorrect = index < score.correct;
-      //   question.isCorrect = isCorrect;
-      // });
-
-      // setUpdatedQuestions(updatedQuestionsCopy);
-
       updateStudyResults(quizId, correctQuestionIDs)
         .then((response) => {
           console.log("Study results updated successfully:", response);

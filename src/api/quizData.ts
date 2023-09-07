@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Question, QuizResponseData } from "@/models/quizzes";
 
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL; WHWERE DO YOU FIND THIS?
-const API_BASE_URL = "https://quizzlerreactapp.onrender.com/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function handleRequest<T>(
   request: Promise<AxiosResponse<T>>
