@@ -1,20 +1,20 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import Container from '../Common/Container';
-import LoadingLayout from '../Loading/LoadingLayout';
-import InformationDisplay from './InformationDisplay/InformationDisplay';
-import { fetchData, updateStudyResults } from '@/api/quizData';
-import useSWR from 'swr';
-import PrimaryCard from '../Common/Cards/PrimaryCard';
-import AnswerButton from '../Common/Buttons/AnswerButton';
-import { QuizData, Answer } from '@/models/quizzes';
-import Score from './Score/Score';
-import QuizHeader from '../Common/Header/QuizHeader';
-import { useFormattedQuestions } from '@/hooks/useFormattedQuestion';
-import { throttle } from 'lodash';
-import { useQuizStore } from '@/store/useQuizStore';
-import QuizIntro from './QuizIntro/QuizIntro';
+"use client";
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import Container from "../Common/Container";
+import LoadingLayout from "../Loading/LoadingLayout";
+import InformationDisplay from "./InformationDisplay/InformationDisplay";
+import { fetchData, updateStudyResults } from "@/api/quizData";
+import useSWR from "swr";
+import PrimaryCard from "../Common/Cards/PrimaryCard";
+import AnswerButton from "../Common/Buttons/AnswerButton";
+import { QuizData, Answer, Question } from "@/models/quizzes";
+import Score from "./Score/Score";
+import QuizHeader from "../Common/Header/QuizHeader";
+import { useFormattedQuestions } from "@/hooks/useFormattedQuestion";
+import { throttle } from "lodash";
+import { useQuizStore } from "@/store/useQuizStore";
+import QuizIntro from "./QuizIntro/QuizIntro";
 
 const SingleQuizLayout: React.FC = () => {
   const params = useParams();
@@ -22,6 +22,7 @@ const SingleQuizLayout: React.FC = () => {
 
   const { data, error, isValidating, isLoading } = useSWR<QuizData>(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
+    // `http://localhost:8080/api/quizzes/${quizId}`,
     fetchData,
     {
       revalidateOnFocus: false,
@@ -31,19 +32,42 @@ const SingleQuizLayout: React.FC = () => {
 
   /* State */
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(null);
-  const [score, setScore] = useState<{ correct: number; incorrect: number }>({ correct: 0, incorrect: 0 });
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
+    null
+  );
+  const [correctQuestionIDs, setCorrectQuestionIDs] = useState<string[]>([]);
+  const [score, setScore] = useState<{ correct: number; incorrect: number }>({
+    correct: 0,
+    incorrect: 0,
+  });
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
+  // only use questions that arent already correct in study mode
+  useEffect(() => {
+    if (data) {
+      const filteredQuestions = data.questions.filter(
+        (question) => question.isCorrect === false
+      );
+      setQuizQuestions(filteredQuestions);
+    }
+  }, [data]);
+
   const [buttonClicked, setButtonClicked] = useState<boolean>(false);
   const { displayQuiz, setDisplayQuiz } = useQuizStore();
-  const currentQuestion = data?.questions[currentQuestionIndex];
+  const currentQuestion = quizQuestions[currentQuestionIndex];
   const finalScore = score.correct - score.incorrect;
-  const [updatedQuestions, setUpdatedQuestions] = useState<QuizData['questions']>([]);
+
+  const [updatedQuestions, setUpdatedQuestions] = useState<
+    QuizData["questions"]
+  >([]);
 
   /* Variables */
   const questions = useFormattedQuestions(currentQuestion || null);
   const isStartOfQuiz = currentQuestionIndex === 0;
-  const isEndOfQuiz = currentQuestionIndex === data?.questions.length;
-  const isCorrect = questions && 'isCorrect' in questions ? questions.isCorrect : false;
+  const isEndOfQuiz = currentQuestionIndex === quizQuestions.length;
+  const isCorrect =
+    questions && "isCorrect" in questions ? questions.isCorrect : false;
+
+  // Filter the questions when the quiz starts
 
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
@@ -54,8 +78,17 @@ const SingleQuizLayout: React.FC = () => {
       setScore((prevScore) => ({
         ...prevScore,
         correct: isCorrect ? prevScore.correct + 1 : prevScore.correct,
-        incorrect: isCorrect ? prevScore.incorrect : prevScore.incorrect + 1,
+        // incorrect: isCorrect ? prevScore.incorrect : prevScore.incorrect + 1,
       }));
+
+      if (isCorrect) {
+        // Access the _id property from the current question
+        const questionId = currentQuestion?._id;
+        if (questionId) {
+          setCorrectQuestionIDs((prevIds) => [...prevIds, questionId]);
+        }
+      }
+
       setButtonClicked(true);
       setTimeout(() => {
         setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
@@ -66,33 +99,32 @@ const SingleQuizLayout: React.FC = () => {
     400,
     { trailing: false }
   );
-  
-  useEffect(()=>{
-    console.log(data);
-    setDisplayQuiz(false);
-  },[])
 
   useEffect(() => {
+    console.log(data);
+    setDisplayQuiz(false);
+  }, []);
 
+  useEffect(() => {
     if (isEndOfQuiz) {
-      const updatedQuestionsCopy = [...data?.questions];
+      // const updatedQuestionsCopy = [quizQuestions];
 
-      updatedQuestionsCopy.forEach((question, index) => {
-        const isCorrect = index < score.correct;
-        question.isCorrect = isCorrect;
-      });
+      // updatedQuestionsCopy.forEach((question, index) => {
+      //   const isCorrect = index < score.correct;
+      //   question.isCorrect = isCorrect;
+      // });
 
-      setUpdatedQuestions(updatedQuestionsCopy);
+      // setUpdatedQuestions(updatedQuestionsCopy);
 
-      updateStudyResults(quizId, updatedQuestionsCopy)
+      updateStudyResults(quizId, correctQuestionIDs)
         .then((response) => {
-          console.log('Study results updated successfully:', response);
+          console.log("Study results updated successfully:", response);
         })
         .catch((error) => {
-          console.error('Error updating study results:', error);
+          console.error("Error updating study results:", error);
         });
     }
-  }, [isEndOfQuiz, data, score.correct]);
+  }, [isEndOfQuiz]);
 
   /* Loading Isvalidating State */
   if (isValidating || isLoading) {
@@ -103,28 +135,44 @@ const SingleQuizLayout: React.FC = () => {
     return <div>Error fetching data</div>;
   }
   return (
-    <div className='bg-slate-200 h-full min-h-screen pb-32'>
+    <div className="bg-slate-200 h-full min-h-screen pb-32">
       <Container>
         {data && (
           <Container>
-            <QuizHeader headerText={data?.quizTitle} score={finalScore} displayScore={true} />
+            <QuizHeader
+              headerText={data?.quizTitle}
+              score={finalScore}
+              displayScore={true}
+            />
             <InformationDisplay />
-            <div className='mt-8'>
+            <div className="mt-8">
               {!displayQuiz ? (
                 <QuizIntro />
               ) : (
                 <>
                   {currentQuestion && (
-                    <PrimaryCard question={`${currentQuestionIndex + 1}. ${currentQuestion.questionTitle}`} />
+                    <PrimaryCard
+                      question={`${currentQuestionIndex + 1}. ${
+                        currentQuestion.questionTitle
+                      }`}
+                    />
                   )}
                   {currentQuestion && (
-                    <div className='mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0'>
+                    <div className="mt-8 flex flex-col space-y-5 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0">
                       {questions.map((answer: Answer, index: number) => (
                         <AnswerButton
                           key={index}
                           label={answer.answerText}
-                          onClick={() => throttledHandleAnswerClick(answer.isCorrect, index)}
-                          answerState={selectedAnswerIndex === index ? (answer.isCorrect ? 'correct' : 'incorrect') : null}
+                          onClick={() =>
+                            throttledHandleAnswerClick(answer.isCorrect, index)
+                          }
+                          answerState={
+                            selectedAnswerIndex === index
+                              ? answer.isCorrect
+                                ? "correct"
+                                : "incorrect"
+                              : null
+                          }
                         />
                       ))}
                     </div>
