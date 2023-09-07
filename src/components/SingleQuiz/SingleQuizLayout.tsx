@@ -17,9 +17,11 @@ import { useQuizStore } from "@/store/useQuizStore";
 import QuizIntro from "./QuizIntro/QuizIntro";
 
 const SingleQuizLayout: React.FC = () => {
+  /* Extract URL Params */
   const params = useParams();
   const quizId = params.quiz.toString();
 
+  /* Fetch Data */
   const { data, error, isValidating, isLoading } = useSWR<QuizData>(
     `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
     // `http://localhost:8080/api/quizzes/${quizId}`,
@@ -48,9 +50,9 @@ const SingleQuizLayout: React.FC = () => {
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const finalScore = score.correct - score.incorrect;
   const questions = useFormattedQuestions(currentQuestion || null);
-  const isEndOfQuiz = currentQuestionIndex === quizQuestions.length;
 
-  // Filter the questions when the quiz starts
+  const isEndOfQuiz = currentQuestionIndex === data?.questions.length;
+
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
       if (buttonClicked) {
@@ -82,14 +84,10 @@ const SingleQuizLayout: React.FC = () => {
     { trailing: false }
   );
 
-  // only use questions that arent already correct in study mode
   useEffect(() => {
-    if (data) {
-      const filteredQuestions = data.questions.filter(
-        (question) => question.isCorrect === false
-      );
-      setQuizQuestions(filteredQuestions);
-    }
+    console.log(data);
+    setDisplayQuiz(false);
+    //@ts-ignore
   }, [data]);
 
   useEffect(() => {
@@ -106,7 +104,8 @@ const SingleQuizLayout: React.FC = () => {
           console.error("Error updating study results:", error);
         });
     }
-  }, [isEndOfQuiz]);
+    //@ts-ignore
+  }, [isEndOfQuiz, data, score.correct]);
 
   /* Loading Isvalidating State */
   if (isValidating || isLoading) {
