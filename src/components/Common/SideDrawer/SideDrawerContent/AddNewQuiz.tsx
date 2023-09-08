@@ -12,7 +12,7 @@ const AddNewQuiz = () => {
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isAddQuizManually, setIsAddQuizManually] = useState(true);
-  const [numQuestions, setNumQuestions] = useState(0); // New state for the number of questions
+  const [numQuestions, setNumQuestions] = useState(1); // New state for the number of questions
 
   const [newQuestionData, setNewQuestionData] = useState<Question>({
     _id: Math.random().toString(36).substring(7),
@@ -33,7 +33,7 @@ const AddNewQuiz = () => {
     });
   };
 
-  const handleSubmitManually = (e: React.FormEvent) => {
+  const handleSubmitManually = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newQuiz: QuizData = {
@@ -45,18 +45,28 @@ const AddNewQuiz = () => {
       numberOfQuestions: numberOfQuestions,
     };
 
-    addQuiz(newQuiz);
-    setQuizTitle("");
-    setQuestions([]);
-    toggleAddQuizSideDrawer(false);
+    try {
+      await addQuiz(newQuiz);
+      setQuizTitle("");
+      setQuestions([]);
+      toggleAddQuizSideDrawer(false);
+    } catch (error) {
+      console.error("An error occurred during manual quiz submission:", error);
+      // You can handle the error in the UI, e.g., show an error message
+    }
   };
 
-  const handleSubmitAI = (e: React.FormEvent) => {
+  const handleSubmitAI = async (e: React.FormEvent) => {
     e.preventDefault();
     // Ai generated quiz logic
-    addQuizWithAI(quizTitle, numberOfQuestions);
-    toggleAddQuizSideDrawer(false);
-    setQuizTitle("");
+    try {
+      await addQuizWithAI(quizTitle, numQuestions); // await the function call
+      toggleAddQuizSideDrawer(false);
+      setQuizTitle("");
+      setNumQuestions(1); // Reset the number of questions input
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   return (
@@ -175,7 +185,7 @@ const AddNewQuiz = () => {
                   value={numQuestions}
                   onChange={(e) => {
                     const value = parseInt(e.target.value);
-                    setNumQuestions(value <= 10 ? value : 10);
+                    setNumQuestions(value);
                   }}
                   min="1" // Set a minimum value (1) to ensure a positive number
                   max="10" // Set the maximum value to 10
