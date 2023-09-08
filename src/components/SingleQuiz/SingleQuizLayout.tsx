@@ -50,8 +50,9 @@ const SingleQuizLayout: React.FC = () => {
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const finalScore = score.correct - score.incorrect;
   const questions = useFormattedQuestions(currentQuestion || null);
-
-  const isEndOfQuiz = currentQuestionIndex === data?.questions.length;
+  const isEndOfQuiz = currentQuestionIndex === quizQuestions.length;
+  const isCorrect =
+    questions && "isCorrect" in questions ? questions.isCorrect : false;
 
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
@@ -85,14 +86,17 @@ const SingleQuizLayout: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log(data);
-    setDisplayQuiz(false);
-    //@ts-ignore
-  }, [data]);
-
-  useEffect(() => {
     setDisplayQuiz(false);
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      const filteredQuestions = data.questions.filter(
+        (question) => question.isCorrect === false
+      );
+      setQuizQuestions(filteredQuestions);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (isEndOfQuiz) {
@@ -105,7 +109,7 @@ const SingleQuizLayout: React.FC = () => {
         });
     }
     //@ts-ignore
-  }, [isEndOfQuiz, data, score.correct]);
+  }, [isEndOfQuiz]);
 
   /* Loading Isvalidating State */
   if (isValidating || isLoading) {

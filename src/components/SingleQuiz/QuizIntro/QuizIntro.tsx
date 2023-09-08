@@ -1,9 +1,8 @@
-import { useParams } from 'next/navigation';
-import { useQuizStore } from '@/store/useQuizStore';
-import { restartQuiz } from '@/api/quizData';
+import { useParams } from "next/navigation";
+import { useQuizStore } from "@/store/useQuizStore";
+import { restartQuiz } from "@/api/quizData";
 
 const QuizIntro: React.FC = () => {
-
   /* Next Router */
   const params = useParams();
   const quizId = params.quiz.toString();
@@ -16,7 +15,7 @@ const QuizIntro: React.FC = () => {
   }
 
   function handleRestartProgress() {
-    restartQuiz(quizId); 
+    restartQuiz(quizId);
   }
 
   return (

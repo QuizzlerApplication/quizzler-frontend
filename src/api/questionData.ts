@@ -1,32 +1,50 @@
-import axios, { AxiosResponse } from 'axios';
-import { Question } from '@/models/quizzes';
+import axios, { AxiosResponse } from "axios";
+import { Question } from "@/models/quizzes";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-async function handleRequest<T>(request: Promise<AxiosResponse<T>>): Promise<T> {
+async function handleRequest<T>(
+  request: Promise<AxiosResponse<T>>
+): Promise<T> {
   try {
     const response = await request;
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const errorData = error.response?.data;
-      throw new Error(errorData?.error || 'An unknown error occurred');
+      throw new Error(errorData?.error || "An unknown error occurred");
     }
-    throw new Error('An unknown error occurred');
+    throw new Error("An unknown error occurred");
   }
 }
 
-export async function addQuestion(quizId: string, questionData: Question): Promise<void> {
+export async function addQuestion(
+  quizId: string,
+  questionData: Question
+): Promise<void> {
   const url = `${API_BASE_URL}/quizzes/question/${quizId}`;
-  await handleRequest(axios.put(url, questionData, { headers: { 'Content-Type': 'application/json' } }));
+  await handleRequest(
+    axios.put(url, questionData, {
+      headers: { "Content-Type": "application/json" },
+    })
+  );
 }
 
 export async function deleteQuestion(questionId: string): Promise<void> {
   const url = `${API_BASE_URL}/quizzes/questions/${questionId}`;
-  await handleRequest(axios.delete(url, { headers: { 'Content-Type': 'application/json' } }));
+  await handleRequest(
+    axios.delete(url, { headers: { "Content-Type": "application/json" } })
+  );
 }
 
-export async function editQuestion(questionId: string, questionData: Question): Promise<Question> {
+export async function editQuestion(
+  questionId: string,
+  questionData: Question
+): Promise<Question> {
   const url = `${API_BASE_URL}/quizzes/questions/${questionId}`;
-  return handleRequest(axios.put(url, questionData, { headers: { 'Content-Type': 'application/json' } }));
+  return handleRequest(
+    axios.put(url, questionData, {
+      headers: { "Content-Type": "application/json" },
+    })
+  );
 }

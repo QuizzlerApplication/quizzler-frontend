@@ -93,3 +93,25 @@ export async function updateStudyResults(
     throw new Error("An error occurred while updating study results");
   }
 }
+
+export async function addQuizWithAI(
+  quizTopic: string,
+  questionCount: number
+): Promise<any> {
+  const url = `${API_BASE_URL}/quizzes/openai`; // Your API endpoint to add a quiz with AI
+
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  const requestData = {
+    quizTopic: quizTopic,
+    questionCount: questionCount,
+  };
+
+  try {
+    return await axios.post(url, requestData, { headers });
+  } catch (error) {
+    throw new Error("An error occurred while adding a quiz with AI");
+  }
+}
