@@ -15,6 +15,7 @@ import { useFormattedQuestions } from "@/hooks/useFormattedQuestion";
 import { throttle } from "lodash";
 import { useQuizStore } from "@/store/useQuizStore";
 import QuizIntro from "./QuizIntro/QuizIntro";
+import { countCorrectQuestions } from "@/utils/countCorrectQuestions";
 
 const SingleQuizLayout: React.FC = () => {
   /* Extract URL Params */
@@ -51,8 +52,9 @@ const SingleQuizLayout: React.FC = () => {
   const finalScore = score.correct - score.incorrect;
   const questions = useFormattedQuestions(currentQuestion || null);
   const isEndOfQuiz = currentQuestionIndex === quizQuestions.length;
-  const isCorrect =
-    questions && "isCorrect" in questions ? questions.isCorrect : false;
+  const numberOfCorrectQuestions = countCorrectQuestions(data);
+  const totalQuestions = data?.questions?.length || 0;
+  const percentage = ((numberOfCorrectQuestions ?? 0) / totalQuestions) * 100;
 
   const throttledHandleAnswerClick = throttle(
     function handleAnswerClick(isCorrect: boolean, answerIndex: number) {
@@ -96,6 +98,7 @@ const SingleQuizLayout: React.FC = () => {
       );
       setQuizQuestions(filteredQuestions);
     }
+    console.log(data);
   }, [data]);
 
   useEffect(() => {
@@ -166,6 +169,7 @@ const SingleQuizLayout: React.FC = () => {
                     <Score
                       score={finalScore}
                       onTryAgain={() => setCurrentQuestionIndex(0)}
+                      percentage={percentage}
                     />
                   )}
                 </>

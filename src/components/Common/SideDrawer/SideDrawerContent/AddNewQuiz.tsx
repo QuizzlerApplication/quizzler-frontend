@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import CloseButton from "../../Buttons/CloseButton";
+import { mutate } from "swr";
+import { useParams } from "next/navigation";
 import Container from "../../Container";
 import { useSideDrawerStore } from "@/store/useSideDrawerStore";
 import { QuizData, Question } from "@/models/quizzes";
@@ -8,6 +10,10 @@ import { ButtonGroup } from "@mui/material";
 import Button from "@mui/material/Button";
 
 const AddNewQuiz = () => {
+  /* Extract URL Params */
+  /* const params = useParams();
+  const quizId = params.quiz.toString();
+ */
   const [quizTitle, setQuizTitle] = useState("");
   const [numberOfQuestions, setNumberOfQuestions] = useState(0);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -45,6 +51,13 @@ const AddNewQuiz = () => {
       numberOfQuestions: numberOfQuestions,
     };
 
+    // Optimistic update: Update the local data as if the quiz has been added successfully
+    /*  mutate(
+      `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
+      { ...newQuiz },
+      false // Do not revalidate immediately
+    ); */
+
     try {
       await addQuiz(newQuiz);
       setQuizTitle("");
@@ -59,6 +72,23 @@ const AddNewQuiz = () => {
   const handleSubmitAI = async (e: React.FormEvent) => {
     e.preventDefault();
     // Ai generated quiz logic
+
+    const newQuiz: QuizData = {
+      __v: 0,
+      _id: Math.random().toString(36).substring(7),
+      quizTitle: quizTitle,
+      questions: questions,
+      numberOfCorrectQuestions: 0,
+      numberOfQuestions: numQuestions,
+    };
+
+    // Optimistic update: Update the local data as if the quiz has been added successfully
+    /* mutate(
+      `https://quizzlerreactapp.onrender.com/api/quizzes/${quizId}`,
+      { ...newQuiz },
+      false // Do not revalidate immediately
+    ); */
+
     try {
       await addQuizWithAI(quizTitle, numQuestions); // await the function call
       toggleAddQuizSideDrawer(false);
@@ -188,7 +218,7 @@ const AddNewQuiz = () => {
                     setNumQuestions(value);
                   }}
                   min="1" // Set a minimum value (1) to ensure a positive number
-                  max="10" // Set the maximum value to 10
+                  max="30" // Set the maximum value to 10
                   required
                 />
               </label>

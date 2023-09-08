@@ -1,14 +1,14 @@
-import React from 'react';
-import Icons from '../Icons';
+import React from "react";
+import Icons from "../Icons";
 
 interface CloseButtonProps {
-  onClick: (event:any) => void;
+  onClick: (event: any) => void;
 }
 
 const CloseButton: React.FC<CloseButtonProps> = ({ onClick }) => {
   return (
     <button onClick={onClick}>
-      <Icons type='close' size={25} color='#667eea'/>
+      <Icons type="close" size={25} color="#667eea" />
     </button>
   );
 };

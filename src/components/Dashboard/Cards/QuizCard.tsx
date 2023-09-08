@@ -24,9 +24,7 @@ const QuizCard = ({
           <div className="w-5 h-5 rounded-full mr-3  flex-none bg-gradient-to-r from-indigo-500 to-purple-500 "></div>
           <div className="ml-3 flex-grow w-2 md:w-32 ">
             <h3 className="text-lg font-semibold truncate">{topic}</h3>
-            <p className="text-md font-regular mb-1">{`${
-              (numCorrectQuestions / numQuestions) * 100
-            }% Correct`}</p>
+            <p className="text-md font-regular mb-1">{`${numCorrectQuestions}/${numQuestions} Correct`}</p>
           </div>
           <div className="space-x-2 flex flex-col xs:flex-row justify-end items-center">
             <Link href={`${linkTo}/edit`}>
