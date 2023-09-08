@@ -42,7 +42,7 @@ const DashboardLayout = () => {
       <Container>
         <DashBoardMenu />
         <div className="pt-32 sm:pt-28">
-          <SubHeader text="Latest Quizzes" size="small" />
+          <SubHeader text="Latestt Quizzes" size="small" />
         </div>
         <div
           className="space-x-1 space-y-6 pb-28 md:space-x-0 md:space-y-0 
