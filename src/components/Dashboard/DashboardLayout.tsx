@@ -9,6 +9,7 @@ import { QuizData } from "@/models/quizzes";
 import { fetchData } from "@/api/quizData";
 import SideDrawer from "../Common/SideDrawer/SideDrawer";
 import { useSideDrawerStore } from "@/store/useSideDrawerStore";
+import ScrollToTop from "../Common/Buttons/ScrollToTop";
 
 const DashboardLayout = () => {
   // Fetch quiz data from the API using useSWR
@@ -66,6 +67,7 @@ const DashboardLayout = () => {
         </div>
       </Container>
       <SideDrawer open={isAddQuizSideDrawerOpen} />
+      <ScrollToTop />
     </div>
   );
 };
